@@ -1,41 +1,31 @@
-// import { default as bcrypt } from 'bcryptjs';
-// import { Blacklist, JWT} from '@/modules/auth/utils';
-// import { Injectable } from '@nestjs/common';
-// import { ERRORS } from '../../constants';
+import { traced } from '@sliit-foss/functions';
+import { default as bcrypt } from 'bcryptjs';
+import { UserRepository } from '@/modules/users/repository';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ERRORS } from '../../constants';
+import { Blacklist, JWT } from '../../utils';
 
-// @Injectable()
-// export class AuthService {
-//   async login({ username, password }: Pick<IUser, 'username' | 'password'>) {
-//     const user = await getUserByUsername(username);
-//     if (!user) throw ERRORS.INVALID_CREDENTIALS;
-//     if (!user.password || !bcrypt.compareSync(password!, user.password)) {
-//       throw ERRORS.INVALID_CREDENTIALS;
-//     }
-//     updateUserById(user.id, { last_login_time: new Date() });
-//     return {
-//       user,
-//       ...JWT.generate(user)
-//     };
-//   }
-// }
+const layer = 'repository';
 
-// export const login = async () => {
+@Injectable()
+export class AuthService {
+  constructor(@InjectRepository(UserRepository) private repository: UserRepository) {}
 
-// };
+  async login({ username, password }: Pick<IUser, 'username' | 'password'>) {
+    const user = await traced[layer](preserveContext(this.repository, 'findByUsername'))(username, true);
+    if (!user) throw ERRORS.INVALID_CREDENTIALS;
+    if (!user.password || !bcrypt.compareSync(password!, user.password)) {
+      throw ERRORS.INVALID_CREDENTIALS;
+    }
+    this.repository.updatebyID(user.id, { last_login_time: new Date() });
+    return {
+      user,
+      ...JWT.generate(user)
+    };
+  }
 
-// export const register = (user: IUser, existingUser?: IUser) => {
-//   const next = (user: IUser) => {
-//     return {
-//       user,
-//       ...generateTokens(user)
-//     };
-//   };
-//   if (existingUser) {
-//     return updateUserById(existingUser._id, user).then(next);
-//   }
-//   return createUser(user).then(next);
-// };
-
-// export const logout = (token: string) => {
-//   return Blacklist.add(token);
-// };
+  logout(token: string) {
+    return Blacklist.add(token);
+  }
+}

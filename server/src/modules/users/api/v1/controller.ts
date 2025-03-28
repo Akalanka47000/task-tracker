@@ -1,6 +1,6 @@
-import { FormattedResponse } from '@/middleware';
+import { AdminProtect, FormattedResponse, Protect } from '@/middleware';
 import { QuerySchema, UUIDSchema } from '@/utils';
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ERRORS } from '../../constants';
 import { User } from '../../models';
@@ -9,6 +9,7 @@ import { UserService } from './service';
 
 @ApiTags('Users')
 @Controller({ path: 'users', version: '1' })
+@UseGuards(Protect, AdminProtect)
 export class UserController {
   constructor(private readonly service: UserService) {}
 

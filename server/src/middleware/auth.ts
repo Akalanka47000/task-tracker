@@ -1,80 +1,107 @@
-// import { Request, Response } from 'express';
-// import { default as context } from 'express-http-context';
-// import { ctxAuthorizerError, ctxHeaders, ctxUser, headers } from '@shared/constants';
-// import { asyncHandler } from '@sliit-foss/functions';
-// import { default as createError } from 'http-errors';
-// import { Blacklist, errors, generateTokens, verify } from '@/modules/auth/utils';
-// import { clearTokenCookies, setTokenCookies } from '@/modules/auth/utils/cookie';
-// import { getUserById } from '@/modules/users/repository';
+import { NextFunction, Request, Response } from 'express';
+import { default as context } from 'express-http-context';
+import { ctxAuthorizerError, ctxHeaders, ctxUser, headers, UserRole } from '@shared/constants';
+import { Observable } from 'rxjs';
+import { ERRORS } from '@/modules/auth/constants';
+import { Blacklist, Cookies, JWT } from '@/modules/auth/utils';
+import { UserService } from '@/modules/users/api/v1/service';
+import { CanActivate, ExecutionContext, Injectable, NestMiddleware } from '@nestjs/common';
 
-// export const forbiddenRouteError = createError(403, 'Route forbidden');
+@Injectable()
+export class Sentinel implements NestMiddleware {
+  constructor(private readonly userService: UserService) {}
 
-// const whitelistedRoutes = ['/v1/auth/login', '/system/health', '/system/liveness', '/system/readiness'];
+  async use(req: Request, res: Response, next: NextFunction) {
+    if (process.env.SERVICE_REQUEST_KEY && req.headers[headers.serviceRequestKey] === process.env.SERVICE_REQUEST_KEY)
+      return next();
 
-// export const sentinel = asyncHandler(async (req: Request, res: Response) => {
-//   if (process.env.SERVICE_REQUEST_KEY && req.headers[headers.serviceRequestKey] === process.env.SERVICE_REQUEST_KEY)
-//     return;
+    const token = req.cookies?.access_token;
 
-//   if (whitelistedRoutes.find((route) => req.path.match(new RegExp(route)))) {
-//     return;
-//   }
+    if (!token) {
+      context.set(ctxAuthorizerError, ERRORS.MISSING_TOKEN);
+      return next();
+    }
 
-//   const token = req.cookies?.access_token;
+    let decodedUser: IUser;
 
-//   if (!token) {
-//     return context.set(ctxAuthorizerError, errors.missing_token);
-//   }
+    try {
+      decodedUser = JWT.verify(token);
+    } catch (e) {
+      if (e.message === 'jwt expired') {
+        const refreshToken = req.cookies?.refresh_token;
+        if (!refreshToken) {
+          context.set(ctxAuthorizerError, e);
+          return next();
+        }
+        try {
+          decodedUser = JWT.verify(refreshToken);
+          const tokens = JWT.generate(decodedUser);
+          Cookies.setTokens(res, tokens.access_token, tokens.refresh_token);
+        } catch (e) {
+          context.set(ctxAuthorizerError, e);
+          return next();
+        }
+      }
+      context.set(ctxAuthorizerError, e);
+      return next();
+    }
 
-//   let decodedUser: IUser;
+    const user = await this.userService.getById(decodedUser.id);
 
-//   try {
-//     decodedUser = verify(token);
-//   } catch (e) {
-//     if (e.message === 'jwt expired') {
-//       const refreshToken = req.cookies?.refresh_token;
-//       if (!refreshToken) {
-//         return context.set(ctxAuthorizerError, e);
-//       }
-//       try {
-//         decodedUser = verify(refreshToken);
-//         const tokens = generateTokens(decodedUser);
-//         setTokenCookies(res, tokens.access_token, tokens.refresh_token);
-//       } catch (e) {
-//         return context.set(ctxAuthorizerError, e);
-//       }
-//     }
-//     return context.set(ctxAuthorizerError, e);
-//   }
+    if (!user) {
+      context.set(ctxAuthorizerError, ERRORS.INVALID_TOKEN);
+      return next();
+    }
+    if (await Blacklist.has(token)) {
+      context.set(ctxAuthorizerError, ERRORS.CANCELLED_TOKEN);
+      return next();
+    }
 
-//   const user = await getUserById(decodedUser._id);
+    req.user = user;
+    req.headers[headers.userId] = user?.id;
+    req.headers[headers.userUsername] = user?.username;
 
-//   if (!user) {
-//     return context.set(ctxAuthorizerError, errors.invalid_token);
-//   }
-//   if (await Blacklist.has(token)) {
-//     return context.set(ctxAuthorizerError, errors.cancelled_token);
-//   }
+    context.set(ctxUser, user);
+    context.set(ctxHeaders, req.headers);
 
-//   req.user = user;
-//   req.headers[headers.userId] = user?._id;
-//   req.headers[headers.userEmail] = user?.email;
+    next();
+  }
+}
 
-//   context.set(ctxUser, user);
-//   context.set(ctxHeaders, req.headers);
-// });
+@Injectable()
+export class Protect implements CanActivate {
+  canActivate(ctx: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+    const request = ctx.switchToHttp().getRequest();
+    const response = ctx.switchToHttp().getResponse();
+    if (
+      process.env.SERVICE_REQUEST_KEY &&
+      request.headers[headers.serviceRequestKey] === process.env.SERVICE_REQUEST_KEY
+    ) {
+      return true;
+    }
+    const authorizerErr = context.get(ctxAuthorizerError);
+    if (authorizerErr) {
+      Cookies.clearTokens(response);
+      throw authorizerErr;
+    }
+    return true;
+  }
+}
 
-// export const protect = asyncHandler(function protect(req: Request, res: Response) {
-//   if (process.env.SERVICE_REQUEST_KEY && req.headers[headers.serviceRequestKey] === process.env.SERVICE_REQUEST_KEY)
-//     return;
-//   const authorizerErr = context.get(ctxAuthorizerError);
-//   if (authorizerErr) {
-//     clearTokenCookies(res);
-//     throw authorizerErr;
-//   }
-// });
-
-// export const internal = asyncHandler(function interalRouteGuard(req: Request) {
-//   if (process.env.SERVICE_REQUEST_KEY && req.headers[headers.serviceRequestKey] === process.env.SERVICE_REQUEST_KEY)
-//     return;
-//   throw forbiddenRouteError;
-// });
+@Injectable()
+export class AdminProtect implements CanActivate {
+  canActivate(ctx: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+    const request = ctx.switchToHttp().getRequest();
+    if (
+      process.env.SERVICE_REQUEST_KEY &&
+      request.headers[headers.serviceRequestKey] === process.env.SERVICE_REQUEST_KEY
+    ) {
+      return true;
+    }
+    const user = request.user as IUser;
+    if (user.role !== UserRole.Administrator) {
+      throw ERRORS.FORBIDDEN_ROUTE;
+    }
+    return true;
+  }
+}

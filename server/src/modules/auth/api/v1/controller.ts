@@ -1,63 +1,37 @@
-// import express, { Request, Response } from 'express';
-// import { tracedAsyncHandler } from '@sliit-foss/functions';
-// import { celebrate, Segments } from 'celebrate';
-// import { protect, toSuccess } from '@/middleware';
-// import { loginSchema, registerSchema } from './schema';
-// import * as service from './service';
+import { Request, Response } from 'express';
+import { FormattedResponse, Protect } from '@/middleware';
+import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { Cookies } from '../../utils';
+import { LoginSchema } from './schema';
+import { AuthService } from './service';
 
-// import { Controller, Get } from '@nestjs/common';
+@ApiTags('Auth')
+@Controller({ path: 'auth', version: '1' })
+export class AuthController {
+  constructor(private readonly service: AuthService) {}
 
-// @Controller()
-// export class AuthController {
-//   constructor(private readonly appService: AppService) {}
+  @Post('login')
+  async create(@Res({ passthrough: true }) res: Response, @Body() payload: LoginSchema) {
+    const { user, access_token, refresh_token } = await this.service.login(payload);
+    Cookies.setTokens(res, access_token, refresh_token);
+    return FormattedResponse.send({
+      message: 'Login successfull!',
+      data: user
+    });
+  }
 
-//   @Get()
-//   getHello(): string {
-//     return this.appService.getHello();
-//   }
-// }
+  @Get('current')
+  @UseGuards(Protect)
+  current(@Req() req: Request) {
+    return FormattedResponse.send({ data: req.user, message: 'Auth user fetched successfully!' });
+  }
 
-// auth.post(
-//   '/login',
-//   celebrate({ [Segments.BODY]: loginSchema }),
-//   tracedAsyncHandler(async function login(req: Request, res: Response) {
-//     const { user, access_token, refresh_token } = await service.login(req.body);
-//     setTokenCookies(res, access_token, refresh_token);
-//     return toSuccess({ res, data: user, message: 'Login successfull!' });
-//   })
-// );
-
-// auth.post(
-//   '/register',
-//   celebrate({ [Segments.BODY]: registerSchema }),
-//   tracedAsyncHandler(async function register(req: Request, res: Response) {
-//     const { user, access_token, refresh_token } = await service.register(req.body, req.user);
-//     setTokenCookies(res, access_token, refresh_token);
-//     return toSuccess({
-//       res,
-//       data: user,
-//       message: 'Registration successfull!'
-//     });
-//   })
-// );
-
-// auth.get(
-//   '/current',
-//   protect,
-//   tracedAsyncHandler(function getAuthUser(req: Request, res: Response) {
-//     delete req.user.password;
-//     return toSuccess({ res, data: req.user, message: 'Auth user fetched successfully!' });
-//   })
-// );
-
-// auth.post(
-//   '/logout',
-//   protect,
-//   tracedAsyncHandler(async function logout(req: Request, res: Response) {
-//     await service.logout(req.cookies.access_token);
-//     clearTokenCookies(res);
-//     return toSuccess({ res, message: 'Logged out successfully!' });
-//   })
-// );
-
-// export default auth;
+  @Post('logout')
+  @UseGuards(Protect)
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    await this.service.logout(req.cookies.access_token);
+    Cookies.clearTokens(res);
+    return FormattedResponse.send({ message: 'Logged out successfully!' });
+  }
+}

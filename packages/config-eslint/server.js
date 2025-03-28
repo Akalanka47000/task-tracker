@@ -3,6 +3,6 @@ module.exports = {
   extends: ['@sliit-foss/eslint-config-internal', 'custom/base'],
   rules: {
     'no-confusing-arrow': 'off',
-    "no-useless-constructor": "off"
+    'no-useless-constructor': 'off'
   }
 };

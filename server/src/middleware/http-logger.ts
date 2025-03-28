@@ -6,10 +6,10 @@ import { omit, pick } from 'lodash';
 export const httpLogger = (req: Request, res: Response, next: NextFunction) => {
   return logger({
     loggable: ({ headers: hdrs, body: payload }) => ({
-      headers: pick(hdrs, [headers.userId, headers.userEmail, headers.userAgent, headers.origin]),
+      headers: pick(hdrs, [headers.userId, headers.userUsername, headers.userAgent, headers.origin]),
       payload: omit(payload, ['password'])
     }),
-    whitelists: ['/api/swagger-ui/*', '/api/favicon/*']
+    whitelists: []
   })(req, res, next);
 };
 

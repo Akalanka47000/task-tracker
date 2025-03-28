@@ -11,4 +11,16 @@ import { UserRepository } from './repository';
   providers: [ServiceV1, UserRepository],
   exports: [TypeOrmModule]
 })
-export class UserModule {}
+export class UserModule {
+  static services() {
+    return [ServiceV1];
+  }
+
+  static repositories() {
+    return [UserRepository];
+  }
+
+  static providers() {
+    return [...this.services(), ...this.repositories()];
+  }
+}

@@ -3,17 +3,14 @@ import { NextFunction, Request, Response } from 'express';
 import { default as context } from 'express-http-context';
 import { ctxCorrelationId, headers } from '@shared/constants';
 import { moduleLogger } from '@sliit-foss/module-logger';
-import { getFromContainer, MetadataStorage } from 'class-validator';
-import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
 import { default as compression } from 'compression';
 import { default as cookieParser } from 'cookie-parser';
 import { default as helmet } from 'helmet';
-import * as qs from 'qs';
-import { Config, Enviroment } from '@/config';
-import { GlobalExceptionFilter, httpLogger, rateLimiter, responseInterceptor } from '@/middleware';
+import { default as qs } from 'qs';
+import { Config } from '@/config';
+import { GlobalExceptionFilter, httpLogger, responseInterceptor } from '@/middleware';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 export const service = 'Task Tracker Service';
@@ -61,26 +58,8 @@ async function bootstrap() {
 
   app.use(responseInterceptor);
 
-  if (Config.ENVIRONMENT !== Enviroment.Production) {
-    const swaggerConfig = new DocumentBuilder().setTitle('Task Tracker API').build();
-
-    const document = SwaggerModule.createDocument(app, swaggerConfig);
-
-    const metadata = (getFromContainer(MetadataStorage) as any).validationMetadatas;
-
-    document.components ??= {};
-
-    document.components.schemas = Object.assign(
-      {},
-      document.components.schemas || {},
-      validationMetadatasToSchemas(metadata)
-    );
-
-    SwaggerModule.setup('api', app, document);
-  }
-
   await app.listen(Config.PORT, Config.HOST, () => {
-    logger.info(`${service} listening on ${Config.HOST}:${Config.PORT}`);
+    logger.info(`server listening on ${Config.HOST}:${Config.PORT}`);
   });
 }
 

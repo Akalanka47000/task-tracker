@@ -7,7 +7,7 @@ export const headers = {
   origin: 'origin',
   cookie: 'cookie',
   userId: 'x-user-id',
-  userEmail: 'x-user-email',
+  userUsername: 'x-user-username',
   correlationId: 'x-correlation-id',
   hostName: 'x-host-name',
   serviceRequestKey: 'x-service-request-key'
