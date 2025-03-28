@@ -1,0 +1,16 @@
+{
+  "name": "@shared/constants",
+  "version": "0.0.0",
+  "description": "A collection of constants used in the application",
+  "private": true,
+  "sideEffects": false,
+  "exports": {
+    "require": "./dist/index.js",
+    "import": "./src/index.ts",
+    "types": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "lint": "sh ../../scripts/lint.sh"
+  }
+}
