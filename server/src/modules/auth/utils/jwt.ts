@@ -4,7 +4,6 @@ import { default as config } from '@/config';
 import { ERRORS } from '../constants';
 
 export class JWT {
-
   private static logger = moduleLogger('Jwt');
 
   public static verify(token: string, ignoreExpiry: boolean = false) {
@@ -18,7 +17,7 @@ export class JWT {
       }
       throw ERRORS.INVALID_TOKEN;
     }
-  };
+  }
   public static generate(user: IUser) {
     delete user.password;
     delete user.last_login_time;
@@ -35,9 +34,5 @@ export class JWT {
       }
     );
     return { access_token: accessToken, refresh_token: refreshToken };
-  };
+  }
 }
-
-
-
-

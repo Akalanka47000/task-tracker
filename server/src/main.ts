@@ -1,18 +1,19 @@
-import { NestFactory } from '@nestjs/core';
-import { ValidationPipe, VersioningType } from '@nestjs/common';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { default as crypto } from 'crypto';
+import { NextFunction, Request, Response } from 'express';
+import { default as context } from 'express-http-context';
+import { ctxCorrelationId, headers } from '@shared/constants';
+import { moduleLogger } from '@sliit-foss/module-logger';
 import { getFromContainer, MetadataStorage } from 'class-validator';
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
 import { default as compression } from 'compression';
-import { default as context } from 'express-http-context';
-import { default as helmet } from 'helmet';
-import { moduleLogger } from '@sliit-foss/module-logger';
-import { default as crypto } from 'crypto';
-import { NextFunction, Request, Response } from 'express';
-import { ctxCorrelationId, headers } from '@shared/constants';
 import { default as cookieParser } from 'cookie-parser';
+import { default as helmet } from 'helmet';
+import * as qs from 'qs';
 import { Config, Enviroment } from '@/config';
-import { httpLogger, rateLimiter, responseInterceptor } from '@/middleware';
+import { GlobalExceptionFilter, httpLogger, rateLimiter, responseInterceptor } from '@/middleware';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 export const service = 'Task Tracker Service';
@@ -43,12 +44,20 @@ async function bootstrap() {
 
   app.useGlobalPipes(
     new ValidationPipe({
-      transform: true,
-      transformOptions: { enableImplicitConversion: true },
-    }),
+      whitelist: true,
+      forbidNonWhitelisted: true
+    })
   );
 
-  // app.useGlobalFilters(new TypeOrmExceptionFilter());
+  app.use((req: Request, _: Response, next: NextFunction) => {
+    Object.defineProperty(req, 'query', {
+      value: qs.parse(req.query as any),
+      enumerable: true
+    });
+    next();
+  });
+
+  app.useGlobalFilters(new GlobalExceptionFilter());
 
   app.use(responseInterceptor);
 
@@ -64,7 +73,7 @@ async function bootstrap() {
     document.components.schemas = Object.assign(
       {},
       document.components.schemas || {},
-      validationMetadatasToSchemas(metadata),
+      validationMetadatasToSchemas(metadata)
     );
 
     SwaggerModule.setup('api', app, document);

@@ -5,9 +5,7 @@
 // import { loginSchema, registerSchema } from './schema';
 // import * as service from './service';
 
-
 // import { Controller, Get } from '@nestjs/common';
-
 
 // @Controller()
 // export class AuthController {
@@ -18,7 +16,6 @@
 //     return this.appService.getHello();
 //   }
 // }
-
 
 // auth.post(
 //   '/login',

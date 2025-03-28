@@ -1,17 +1,22 @@
 import 'reflect-metadata';
-import { User } from '../../modules/users/models';
+import { DataSource, DataSourceOptions } from 'typeorm';
+import { type SeederOptions } from 'typeorm-extension';
 import { default as Config } from '@/config';
-import { DataSource } from 'typeorm';
+import { User } from '../../modules/users/models';
 
 export * from './repository';
 
-const dataSource = new DataSource({
+const dataSourceOptions: DataSourceOptions & SeederOptions = {
   type: 'postgres',
   url: Config.DB_URL,
   synchronize: false,
   logging: process.env.NODE_ENV === 'development',
   entities: [User],
-  migrations: ['./src/database/postgres/migrations/*.ts']
-});
+  migrations: process.env.TYPEORM_CLI ? ['./src/database/postgres/migrations/**.ts'] : [],
+  migrationsRun: false,
+  seeds: ['./src/database/postgres/seeds/*.ts']
+};
+
+const dataSource = new DataSource(dataSourceOptions);
 
 export default dataSource;

@@ -1,7 +1,7 @@
-import Config from '@/config';
 import { moduleLogger } from '@sliit-foss/module-logger';
 import { LockOptions, default as Redis } from 'ioredis';
 import { default as Redlock } from 'redlock';
+import Config from '@/config';
 
 const logger = moduleLogger('Redis');
 

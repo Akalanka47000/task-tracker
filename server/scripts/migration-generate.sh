@@ -1,0 +1,1 @@
+npm run typeorm migration:generate ./src/database/postgres/migrations/$1

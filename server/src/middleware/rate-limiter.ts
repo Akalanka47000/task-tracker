@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
 import { default as crypto } from 'crypto';
+import { Request, Response } from 'express';
 import { Options, default as rateLimit } from 'express-rate-limit';
 import { headers } from '@shared/constants';
 import { default as RedisStore } from 'rate-limit-redis';
@@ -17,7 +17,7 @@ const options: Partial<Options> = {
   skip: (req: Request) =>
     !!(process.env.SERVICE_REQUEST_KEY && req.headers[headers.serviceRequestKey] === process.env.SERVICE_REQUEST_KEY),
   keyGenerator: (req: Request) => requestIp.getClientIp(req) ?? crypto.randomUUID()
-}
+};
 
 if (process.env.REDIS_CONNECTION_STRING && !process.env.USE_IN_MEMORY_RATE_LIMITER) {
   const { redis } = require('../database/redis').default;

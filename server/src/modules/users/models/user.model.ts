@@ -1,5 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { UserRole } from '@shared/constants';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity({ name: 'users', comment: 'Stores all users within the system' })
 export class User {
@@ -19,13 +19,13 @@ export class User {
   password?: string;
 
   @Column({
-    type: "enum",
+    type: 'enum',
     enum: UserRole,
-    default: UserRole.Employee,
+    default: UserRole.Employee
   })
   role: UserRole;
 
-  @Column({ type: "jsonb", default: {}, comment: "Stores role specific fields" })
+  @Column({ type: 'jsonb', default: {}, comment: 'Stores role specific fields' })
   details: UserDetails[UserRole];
 
   @Column({ type: 'timestamp', nullable: true })
@@ -39,7 +39,7 @@ export class User {
 
   static cleanse(user: IUser) {
     user.password = undefined as any;
-    return user
+    return user;
   }
 }
 

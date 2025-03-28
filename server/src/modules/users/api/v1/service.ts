@@ -1,34 +1,38 @@
+import { default as crypto } from 'crypto';
 import { traced } from '@sliit-foss/functions';
-import { InjectRepository } from '@nestjs/typeorm';
+import { default as bcrypt } from 'bcryptjs';
+import { Config } from '@/config';
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from '../../repository';
-import { hashPasswordIfProvided } from '../../utils';
 
 const layer = 'repository';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectRepository(UserRepository) private repository: UserRepository) { }
+  constructor(@InjectRepository(UserRepository) private repository: UserRepository) {}
 
   async create(user: Partial<IUser>) {
-    await hashPasswordIfProvided(user);
-    return traced[layer](this.repository.insertOne)(user);
+    const autoGeneratatedPassword = crypto.randomBytes(6).toString('hex');
+    user.password = await bcrypt.hash(autoGeneratatedPassword, Config.SALT_ROUNDS);
+    const result = await traced[layer](preserveContext(this.repository, 'save'))(user);
+    result.password = autoGeneratatedPassword;
+    return user;
   }
 
-  async getAll(retrievalOptions: QueryOptions) {
-    return this.repository.findAll(retrievalOptions);
+  getAll(retrievalOptions: QueryOptions) {
+    return traced[layer](preserveContext(this.repository, 'findAll'))(retrievalOptions);
   }
 
-  async getById(id: string) {
-    return traced[layer](this.repository.findByID)(id);
+  getById(id: string) {
+    return traced[layer](preserveContext(this.repository, 'findByID'))(id);
   }
 
-  async updateById(id: string, data: Partial<IUser>) {
-    await hashPasswordIfProvided(data);
-    return traced[layer](this.repository.updatebyID)(id, data);
+  updateById(id: string, data: Partial<IUser>) {
+    return traced[layer](preserveContext(this.repository, 'updatebyID'))(id, data);
   }
 
-  async deleteById(id: string) {
-    return traced[layer](this.repository.delete)(id);
+  deleteById(id: string) {
+    return traced[layer](preserveContext(this.repository, 'delete'))(id);
   }
 }

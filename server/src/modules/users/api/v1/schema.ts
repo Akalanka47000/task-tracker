@@ -1,7 +1,7 @@
-import { PartialType } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsEnum, IsOptional, ValidateIf, IsObject, ValidateNested } from 'class-validator';
 import { EmployeeDepartment, UserRole } from '@shared/constants';
 import { Type } from 'class-transformer';
+import { IsEnum, IsNotEmpty, IsObject, IsOptional, IsString, ValidateIf, ValidateNested } from 'class-validator';
+import { OmitType, PartialType } from '@nestjs/swagger';
 
 class EmployeeDetailsSchema {
   @IsNotEmpty()
@@ -10,16 +10,16 @@ class EmployeeDetailsSchema {
 }
 
 export class CreateUserSchema {
-  @IsNotEmpty()
   @IsString()
+  @IsNotEmpty()
   first_name: string;
 
-  @IsNotEmpty()
   @IsString()
+  @IsNotEmpty()
   last_name: string;
 
-  @IsNotEmpty()
   @IsString()
+  @IsNotEmpty()
   username: string;
 
   @IsOptional()
@@ -28,10 +28,10 @@ export class CreateUserSchema {
 
   @IsOptional()
   @IsObject()
-  @ValidateIf((o) => o.role === UserRole.Employee)
+  @ValidateIf((o) => !o.role || o.role === UserRole.Employee)
   @ValidateNested()
   @Type(() => EmployeeDetailsSchema)
   details?: EmployeeDetails;
 }
 
-export class UpdateUserSchema extends PartialType(CreateUserSchema) {}
+export class UpdateUserSchema extends PartialType(OmitType(CreateUserSchema, ['username'])) {}

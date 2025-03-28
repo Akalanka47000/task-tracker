@@ -1,13 +1,12 @@
-import "dotenv/config";
-
+import 'dotenv/config';
 import { moduleLogger } from '@sliit-foss/module-logger';
 
 const logger = moduleLogger('Config');
 
 export enum Enviroment {
-  Production = "Production",
-  Development = "Development",
-  Local = "Local"
+  Production = 'Production',
+  Development = 'Development',
+  Local = 'Local'
 }
 
 export const Config = {
@@ -23,18 +22,15 @@ export const Config = {
   SERVICE_REQUEST_KEY: process.env.SERVICE_REQUEST_KEY,
   HEALTH_CHECK_ACCESS_TOKEN: process.env.HEALTH_CHECK_ACCESS_TOKEN,
   ENVIRONMENT: process.env.ENVIRONMENT ?? Enviroment.Local
-}
+};
 
-const requiredKeys = [
-  'DB_URL',
-  'REDIS_CONNECTION_STRING'
-]
+const requiredKeys = ['DB_URL', 'REDIS_CONNECTION_STRING'];
 
 requiredKeys.forEach((k) => {
   if (!Config[k]) {
     logger.error(`Missing required environment variable: ${k}`);
     process.exit(1);
   }
-})
+});
 
 export default Config;

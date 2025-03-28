@@ -1,21 +1,14 @@
-import { CustomRepository } from '@/database/postgres';
-import { User } from './models';
 import { DeepPartial, Repository } from 'typeorm';
+import { CustomRepository } from '@/database/postgres';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from './models';
 
 @Injectable()
 export class UserRepository extends CustomRepository<User> {
-  constructor(
-    @InjectRepository(User) repository: Repository<User>) {
+  constructor(@InjectRepository(User) repository: Repository<User>) {
     super(repository.target, repository.manager, repository.queryRunner);
   }
-
-  async insertOne(entity: DeepPartial<User>) {
-    const result = await this.save(entity);
-    return User.cleanse(result as any);
-  }
-
   async findByUsername(username: string, plain = false) {
     const user = await this.findOneBy({ username });
     if (plain || !user) return user;
@@ -28,8 +21,8 @@ export class UserRepository extends CustomRepository<User> {
     return User.cleanse(user);
   }
 
-  async findAll(opts: QueryOptions) {
-    return this.paginate(opts)
+  findAll(opts: QueryOptions) {
+    return this.paginate(opts);
   }
 
   async updatebyID(id: string, data: DeepPartial<IUser>) {

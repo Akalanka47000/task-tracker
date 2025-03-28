@@ -8,7 +8,7 @@ export class Cookies {
       sameSite: 'strict',
       maxAge: expiry * 60 * 60 * 1000
     });
-  };
+  }
 
   /**
    * @descriptions Adds an access token and a refresh token to the response cookies.
@@ -16,8 +16,7 @@ export class Cookies {
   public static setTokens(response: Response, accessToken: string, refreshToken: string) {
     this.setCookie(response, 'access_token', accessToken, 1);
     this.setCookie(response, 'refresh_token', refreshToken, 24 * 30);
-  };
-
+  }
 
   /**
    * @description Clears the access and refresh tokens from the response cookies.
@@ -25,5 +24,5 @@ export class Cookies {
   public static clearTokens(response: Response) {
     response.clearCookie('access_token');
     response.clearCookie('refresh_token');
-  };
+  }
 }

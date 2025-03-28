@@ -3,12 +3,11 @@ import { TerminusModule } from '@nestjs/terminus';
 import { SystemController } from './controller';
 
 @Module({
-    imports: [
-        TerminusModule.forRoot({
-            gracefulShutdownTimeoutMs: 30000,
-        }),
-    ],
-    controllers: [SystemController],
+  imports: [
+    TerminusModule.forRoot({
+      gracefulShutdownTimeoutMs: 30000
+    })
+  ],
+  controllers: [SystemController]
 })
-
-export class SystemModule { }
+export class SystemModule {}

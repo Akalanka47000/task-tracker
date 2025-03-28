@@ -15,6 +15,7 @@ export type PaginatedResult<T> = {
 export class CustomRepository<Entity extends ObjectLiteral> extends Repository<Entity> {
   async paginate(options: QueryOptions) {
     const opts: FindManyOptions = {};
+
     if (options.filter) {
       opts.where = options.filter;
     }
