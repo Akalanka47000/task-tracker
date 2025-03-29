@@ -36,7 +36,7 @@ export class Task {
   @ManyToOne(() => User)
   @JoinColumn({ name: 'employee_id' })
   @Index('idx_employee_id')
-  employee: User;
+  employee?: User;
 
   @Column({ nullable: false })
   employee_id: string;

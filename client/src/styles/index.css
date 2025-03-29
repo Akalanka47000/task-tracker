@@ -1,0 +1,11 @@
+@import "./components/index.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply !dark !bg-background !text-foreground;
+  }
+}
