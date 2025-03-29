@@ -1,7 +1,7 @@
 import { HTMLProps } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ListTodo } from 'lucide-react';
-import { ROUTE_HOME, ROUTE_LOGIN } from '@/constants';
+import { ROUTE_DASHBOARD, ROUTE_LOGIN } from '@/constants';
 import { useGetProfile } from '@/hooks/services/auth';
 import { authService } from '@/services';
 import { resetStores } from '@/store';
@@ -33,7 +33,7 @@ export function Header({ className, ...props }: HTMLProps<HTMLHeadElement>) {
     <header
       className={cn('w-full h-24 px-8 sm:px-10 flex justify-between items-center bg-black', className)}
       {...props}>
-      <Link to={ROUTE_HOME}>
+      <Link to={ROUTE_DASHBOARD}>
         <ListTodo className="sm:hidden mx-auto text-md p-2.5 border-1 border-primary/60 rounded-md" size={40} />
         <h3 className="hidden sm:block text-lg md:text-2xl text-start tracking-wider">Task Tracker</h3>
       </Link>

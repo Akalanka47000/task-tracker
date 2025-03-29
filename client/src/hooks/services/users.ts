@@ -1,6 +1,6 @@
+import { UserRole } from '@shared/constants';
 import { userService } from '@/services';
 import { GetPaginatedQueryProps } from '@/types';
-import { UserRole } from '@shared/constants';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 export function useGetEmployees({ page, limit, params = {} }: GetPaginatedQueryProps) {

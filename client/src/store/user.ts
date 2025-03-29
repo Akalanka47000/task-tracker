@@ -5,7 +5,7 @@ interface UserSlice {
   selectedUser?: IUser;
   isUserDialogOpen: boolean;
   isUserDeleteDialogOpen: boolean;
-  openUserDialogWithSelector: (arg: IUser) => void;
+  openUserDialogWithSelector: (arg?: IUser) => void;
   openUserDeleteDialogWithSelector: (arg: IUser) => void;
   setIsUserDialogOpen: (arg: boolean) => void;
   setIsUserDeleteDialogOpen: (arg: boolean) => void;
@@ -18,7 +18,7 @@ const createUserSlice: StateCreator<UserSlice> = (set) => ({
   openUserDialogWithSelector: (arg) => set({ selectedUser: arg, isUserDialogOpen: true }),
   openUserDeleteDialogWithSelector: (arg) => set({ selectedUser: arg, isUserDeleteDialogOpen: true }),
   setIsUserDialogOpen: (arg) => set({ isUserDialogOpen: arg, ...(arg ? {} : { selectedUser: undefined }) }),
-  setIsUserDeleteDialogOpen: (arg) => set({ isUserDeleteDialogOpen: arg, ...(arg ? {} : { selectedUser: undefined }) }),
+  setIsUserDeleteDialogOpen: (arg) => set({ isUserDeleteDialogOpen: arg, ...(arg ? {} : { selectedUser: undefined }) })
 });
 
 export const useUserStore = create<UserSlice>()(devtools(createUserSlice));

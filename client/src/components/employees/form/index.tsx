@@ -1,21 +1,9 @@
 import { UseFormReturn } from 'react-hook-form';
-import { Priority } from '@shared/constants';
+import { EmployeeDepartment } from '@shared/constants';
 import { z } from 'zod';
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Input,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components';
-import { useTaskStore } from '@/store/task';
+import { FormField, FormInput, FormSelect } from '@/components';
 import { cn } from '@/utils';
+import { SelectItem } from '@heroui/react';
 import { FormSchema } from './schema';
 
 export * from './schema';
@@ -27,50 +15,32 @@ export default function TaskForm({
   form: UseFormReturn<z.infer<typeof FormSchema>>;
   className?: string;
 }) {
-  const selectedTask = useTaskStore((state) => state.selectedTask);
   return (
     <div className={cn('flex flex-col gap-3 sm:gap-4', className)}>
       <FormField
         control={form.control}
-        name="name"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel label="Name" required />
-            <FormControl>
-              <Input type="text" placeholder="Enter task name" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
+        name="first_name"
+        render={({ field }) => <FormInput label="First name" placeholder="Enter first name" {...field} />}
       />
       <FormField
         control={form.control}
-        name="priority"
-        render={({ field: { onChange, name, value, disabled } }) => (
-          <FormItem>
-            <FormLabel label="Priority" required />
-            <FormControl>
-              <Select
-                name={name}
-                defaultValue={value !== undefined ? value.toString() : undefined}
-                disabled={disabled}
-                onValueChange={(value) => onChange(Number(value))}>
-                <SelectTrigger id="priority">
-                  <SelectValue placeholder="Select priority" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.values(Priority)
-                    .filter(Number)
-                    .map((p) => (
-                      <SelectItem key={p} value={String(p)}>
-                        {Priority[Number(p)]}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
+        name="last_name"
+        render={({ field }) => <FormInput label="Last name" placeholder="Enter last name" {...field} />}
+      />
+      <FormField
+        control={form.control}
+        name="username"
+        render={({ field }) => <FormInput label="Username" placeholder="Username" {...field} />}
+      />
+      <FormField
+        control={form.control}
+        name="details.department"
+        render={({ field }) => (
+          <FormSelect label="Department" placeholder="Select department" defaultSelectedKeys={[field.value]} {...field}>
+            {Object.values(EmployeeDepartment).map((department) => (
+              <SelectItem key={department}>{department}</SelectItem>
+            ))}
+          </FormSelect>
         )}
       />
     </div>

@@ -1,8 +1,11 @@
-import { Priority } from '@shared/constants';
+import { EmployeeDepartment } from '@shared/constants';
 import { z } from 'zod';
 
 export const FormSchema = z.object({
-  name: z.string(),
-  description: z.string(),
-  priority: z.nativeEnum(Priority)
+  first_name: z.string(),
+  last_name: z.string(),
+  username: z.string(),
+  details: z.object({
+    department: z.nativeEnum(EmployeeDepartment, { required_error: 'Please select a department' })
+  })
 });

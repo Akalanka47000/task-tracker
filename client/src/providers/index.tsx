@@ -10,8 +10,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         {children}
         <ToastProvider
           toastProps={{
-            timeout: 3000,
-          }} />
+            timeout: 3000
+          }}
+        />
       </HeroUIProvider>
     </QueryClientProvider>
   );

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Lock, User } from 'lucide-react';
 import { z } from 'zod';
 import { Button, Form, FormField, FormInput } from '@/components';
-import { ROUTE_HOME } from '@/constants';
+import { ROUTE_DASHBOARD } from '@/constants';
 import { authService } from '@/services';
 import { useAuthStore } from '@/store/auth';
 import { filterAndNotifyError } from '@/utils';
@@ -34,7 +34,7 @@ export function LoginForm() {
     onSuccess: (result) => {
       addToast({ title: result.message, color: 'success' });
       setProfile(result.data);
-      navigate(ROUTE_HOME);
+      navigate(ROUTE_DASHBOARD);
     },
     onError: filterAndNotifyError
   });

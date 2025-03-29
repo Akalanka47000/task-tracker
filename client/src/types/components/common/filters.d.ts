@@ -14,9 +14,7 @@ export interface FilterDefinition {
   operator?: string;
   inputType?: string;
   showFormLabel?: boolean;
-  compoundOperator?: string;
   className?: string;
-  virtualized?: boolean;
 }
 
 export interface FilterProps {

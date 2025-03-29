@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, TableProps, TableHeaderProps, TableBodyProps, DropdownTrigger, Dropdown, DropdownMenu, DropdownItem } from "@heroui/react";
 import {
   ArrowDown,
   ArrowUp,
@@ -11,8 +10,23 @@ import {
   Loader2
 } from 'lucide-react';
 import { Button, Skeleton } from '@/components';
-import { LIMIT, LIMIT_8, PAGE } from '@/constants';
+import { LIMIT, LIMIT_8, PAGE, SORT } from '@/constants';
 import { cn } from '@/utils';
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Table,
+  TableBody,
+  TableBodyProps,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableHeaderProps,
+  TableProps,
+  TableRow
+} from '@heroui/react';
 import { UseQueryResult } from '@tanstack/react-query';
 import {
   Column,
@@ -75,10 +89,12 @@ export function DataTable({
       ...useDataFetcher.params,
       ...sorting.reduce(
         (acc, curr) => {
-          acc[`sort[${curr.id}]`] = curr.desc ? -1 : 1;
+          acc[SORT][curr.id] = curr.desc ? 'DESC' : 'ASC';
           return acc;
         },
-        {} as Record<string, number>
+        {
+          [SORT]: {} as Record<string, string>
+        }
       )
     }
   });
@@ -106,7 +122,6 @@ export function DataTable({
     getCoreRowModel: getCoreRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    manualSorting: true,
     state: {
       sorting,
       pagination,
@@ -130,27 +145,27 @@ export function DataTable({
               <TableHeader {...tableProps?.header}>
                 {table.getFlatHeaders().map((header) => {
                   const meta = header.column.columnDef.meta as any;
-                  return <TableColumn
-                    key={header.id}
-                    className={cn('px-4', meta?.headerClassName, meta?.className)}
-                    style={{ minWidth: `${header.column.columnDef.minSize}px` }}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableColumn>
+                  return (
+                    <TableColumn
+                      key={header.id}
+                      className={cn('px-4', meta?.headerClassName, meta?.className)}
+                      style={{ minWidth: `${header.column.columnDef.minSize}px` }}>
+                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                    </TableColumn>
+                  );
                 })}
               </TableHeader>
               <TableBody {...tableProps?.body}>
                 {isLoading &&
-                  Array.from({ length: pageSize }).map((_, index) => (
+                  (Array.from({ length: pageSize }).map((_, index) => (
                     <TableRow key={index}>
                       <TableCell colSpan={columns.length}>
                         <Skeleton className="w-full h-8" />
                       </TableCell>
                     </TableRow>
-                  )) as any}
-                {!isLoading ?
-                  (table.getRowModel().rows?.length ? (
+                  )) as any)}
+                {!isLoading ? (
+                  table.getRowModel().rows?.length ? (
                     table.getRowModel().rows.map((row) => (
                       <TableRow
                         className={cn('transition duration-150', isFetching && 'opacity-50 pointer-events-none')}
@@ -172,14 +187,19 @@ export function DataTable({
                         No results.
                       </TableCell>
                     </TableRow>
-                  )) : <></>}
+                  )
+                ) : (
+                  <></>
+                )}
               </TableBody>
             </Table>
           </div>
         </div>
         {paginate && (
           <div className="flex items-center justify-end space-x-2">
-            {isFetching ? <Loader2 className="animate-spin" /> : (
+            {isFetching ? (
+              <Loader2 className="animate-spin" />
+            ) : (
               data?.docs && (
                 <div className="mr-4 text-sm text-muted-foreground">
                   Page {table.getState().pagination.pageIndex + (table.getPageCount() ? 1 : 0)} of{' '}
@@ -192,32 +212,32 @@ export function DataTable({
                 variant="flat"
                 size="sm"
                 className="rounded-full w-8 min-w-8 p-0"
-                onClick={() => table.firstPage()}
-                disabled={!table.getCanPreviousPage()}>
+                onPress={() => table.firstPage()}
+                isDisabled={!table.getCanPreviousPage()}>
                 <ChevronsLeft className="h-4 w-4" />
               </Button>
               <Button
                 variant="solid"
                 size="sm"
                 className="rounded-full w-8 min-w-8 p-0"
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}>
+                onPress={() => table.previousPage()}
+                isDisabled={!table.getCanPreviousPage()}>
                 <ChevronLeft className="h-4 w-4" />
               </Button>
               <Button
                 variant="solid"
                 className="rounded-full w-8 min-w-8 p-0"
                 size="sm"
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}>
+                onPress={() => table.nextPage()}
+                isDisabled={!table.getCanNextPage()}>
                 <ChevronRight className="h-4 w-4" />
               </Button>
               <Button
                 variant="flat"
                 className="rounded-full w-8 min-w-8 p-0"
                 size="sm"
-                onClick={() => table.lastPage()}
-                disabled={!table.getCanNextPage()}>
+                onPress={() => table.lastPage()}
+                isDisabled={!table.getCanNextPage()}>
                 <ChevronsRight className="h-4 w-4" />
               </Button>
             </div>
@@ -238,6 +258,12 @@ export function DataTableColumnHeader<TData, TValue>({
   title,
   className
 }: DataTableColumnHeaderProps<TData, TValue>) {
+  useEffect(() => {
+    if (column.getCanSort() && (column.columnDef.meta as any)?.defaultSort) {
+      column.toggleSorting();
+    }
+  }, []);
+
   if (!column.getCanSort()) {
     return <div className={cn(className)}>{title}</div>;
   }
@@ -253,19 +279,25 @@ export function DataTableColumnHeader<TData, TValue>({
             className=" h-6 data-[state=open]:bg-accent ring-transparent focus-visible:ring-0 focus-visible:ring-offset-0">
             <span>{title}</span>
             {column.getIsSorted() === 'desc' ? (
-              <ArrowDown className={iconClassName} />
-            ) : column.getIsSorted() === 'asc' ? (
               <ArrowUp className={iconClassName} />
+            ) : column.getIsSorted() === 'asc' ? (
+              <ArrowDown className={iconClassName} />
             ) : (
               <ChevronsUpDown className={iconClassName} />
             )}
           </Button>
         </DropdownTrigger>
-        <DropdownMenu className="min-w-[5rem]">
-          <DropdownItem key="asc" onClick={() => column.toggleSorting(false)} className="flex justify-center">
+        <DropdownMenu>
+          <DropdownItem
+            key="asc"
+            onPress={() => column.toggleSorting(false)}
+            className="flex text-center justify-center">
             Asc
           </DropdownItem>
-          <DropdownItem key="desc" onClick={() => column.toggleSorting(true)} className="flex justify-center">
+          <DropdownItem
+            key="desc"
+            onPress={() => column.toggleSorting(true)}
+            className="flex text-center justify-center">
             Desc
           </DropdownItem>
         </DropdownMenu>

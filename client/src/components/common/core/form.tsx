@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Controller, ControllerProps, FieldPath, FieldValues, FormProvider, useFormContext } from 'react-hook-form';
+import { Select, Textarea } from '@heroui/react';
 import { Input } from './input';
 
 const Form = FormProvider;
@@ -46,4 +47,14 @@ const FormInput = React.forwardRef<HTMLInputElement, React.ComponentProps<typeof
   return <Input ref={ref} errorMessage={error?.message} isInvalid={!!error?.message} {...props} />;
 });
 
-export { useFormField, Form, FormInput, FormField };
+const FormSelect = React.forwardRef<HTMLSelectElement, React.ComponentProps<typeof Select>>((props, ref) => {
+  const { error } = useFormField();
+  return <Select ref={ref} errorMessage={error?.message} isInvalid={!!error?.message} {...props} />;
+});
+
+const FormTextArea = React.forwardRef<HTMLTextAreaElement, React.ComponentProps<typeof Textarea>>((props, ref) => {
+  const { error } = useFormField();
+  return <Textarea ref={ref} errorMessage={error?.message} isInvalid={!!error?.message} {...props} />;
+});
+
+export { useFormField, Form, FormInput, FormSelect, FormTextArea, FormField };

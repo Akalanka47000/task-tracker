@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import { Button, DataTable, Filters } from '@/components';
 import { dataAttributes } from '@/constants';
-import { useGetEmployees, useMediaQuery } from '@/hooks';
-import { cn } from '@/utils';
+import { useGetEmployees } from '@/hooks';
+import { useUserStore } from '@/store/user';
 import { columns } from './columns';
-// import { testIds as createDialogTestIds, default as CreateOrUpdateDialog } from './create-dialog';
-// import { default as DeleteDialog } from './delete';
+import { testIds as createDialogTestIds, default as CreateOrUpdateDialog } from './create-dialog';
+import { default as DeleteDialog } from './delete';
 
 export const testIds = {
-  // ...createDialogTestIds,
-  taskList: 'task-list',
-  createButton: 'task-create-button'
+  ...createDialogTestIds,
+  userList: 'user-list',
+  createButton: 'user-create-button'
 };
 
 export function EmployeeTable() {
-  const isMobile = useMediaQuery('(max-width: 768px)');
+  const openUserDialogWithSelector = useUserStore((state) => state.openUserDialogWithSelector);
 
   const [filters, setFilters] = useState({});
 
@@ -26,10 +26,9 @@ export function EmployeeTable() {
           <Filters
             definitions={[
               {
-                key: 'first_name',
-                placeholder: 'Search...',
-                regexp: true
-              },
+                key: 'id',
+                placeholder: 'Search by Employee ID...'
+              }
             ]}
             setFilters={setFilters}
           />
@@ -38,22 +37,21 @@ export function EmployeeTable() {
           fn: useGetEmployees as any,
           params: filters
         }}
-        // endComponent={
-        //   <CreateOrUpdateDialog>
-        //     <Button variant="solid" {...{ [dataAttributes.testId]: testIds.createButton }}>
-        //       Add Employee
-        //     </Button>
-        //   </CreateOrUpdateDialog>
-        // }
-        filterContainerClassName={cn(isMobile && 'justify-end')}
-        endComponentClassName={cn(isMobile && 'ml-0')}
+        endComponent={
+          <Button
+            {...{ [dataAttributes.testId]: testIds.createButton }}
+            onPress={() => openUserDialogWithSelector(undefined)}>
+            Add Employee
+          </Button>
+        }
         tableProps={{
           body: {
-            [dataAttributes.testId]: testIds.taskList
+            [dataAttributes.testId]: testIds.userList
           }
         }}
       />
-      {/* <DeleteDialog /> */}
+      <CreateOrUpdateDialog />
+      <DeleteDialog />
     </>
   );
 }

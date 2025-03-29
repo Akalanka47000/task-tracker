@@ -1,53 +1,49 @@
-import { Copy, Ellipsis, Pen, Trash2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Copy, Ellipsis, FileSliders, Pen, Trash2 } from 'lucide-react';
 import { Button } from '@/components';
-import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownSection,
-  DropdownItem
-} from "@heroui/dropdown";
-import { DataTableColumnHeader } from '@/components/common';
+import { DataTableColumnHeader, DepartmentBadge } from '@/components/common';
+import { ROUTE_TASKS } from '@/constants';
 import { useUserStore } from '@/store/user';
-import { ColumnDef } from '@tanstack/react-table';
+import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@heroui/dropdown';
 import { addToast } from '@heroui/react';
+import { ColumnDef } from '@tanstack/react-table';
 
 export const columns: ColumnDef<IUser>[] = [
   {
     accessorKey: 'id',
-    header: 'ID',
+    header: 'Employee ID',
     cell: (data) => {
       const onCopy = () => {
         navigator.clipboard.writeText(data.row.original.id);
-        addToast({ title: 'Employee ID copied to clipboard', color: "primary" });
-      }
-      return <div className='flex gap-2 items-center'>
-        <span>
-          {data.row.original.id.slice(0, 8)}
-        </span>
-        <Copy className='w-4 h-4 cursor-pointer hover:text-primary transition-all duration-300' onClick={onCopy} />
-      </div>
+        addToast({ title: 'Employee ID copied to clipboard', color: 'primary' });
+      };
+      return (
+        <div className="flex gap-2 items-center">
+          <span>{data.row.original.id.slice(0, 8)}...</span>
+          <Copy className="w-4 h-4 cursor-pointer hover:text-primary transition-all duration-300" onClick={onCopy} />
+        </div>
+      );
     }
   },
   {
     accessorKey: 'first_name',
-    header: 'First Name',
+    header: 'First Name'
   },
   {
     accessorKey: 'last_name',
-    header: 'Last Name',
+    header: 'Last Name'
   },
   {
     accessorKey: 'username',
     header: 'Username',
     meta: {
-      cellClassName: 'text-foreground',
+      cellClassName: 'text-foreground'
     }
   },
   {
     accessorKey: 'department',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Department" className="justify-center" />,
-    cell: (data) => data.row.original.details.department ?? "N/A",
+    header: 'Department',
+    cell: (data) => <DepartmentBadge department={data.row.original.details.department ?? 'N/A'} />,
     meta: {
       className: 'text-center'
     },
@@ -80,7 +76,7 @@ export const columns: ColumnDef<IUser>[] = [
           <DropdownTrigger>
             <Button
               variant="flat"
-              color='default'
+              color="default"
               size="sm"
               className="min-w-8 p-0 focus-visible:ring-0 focus-visible:ring-transparent">
               <span className="sr-only">Open menu</span>
@@ -93,6 +89,9 @@ export const columns: ColumnDef<IUser>[] = [
             </DropdownItem>
             <DropdownItem key="delete">
               <DeleteUser data={data.row.original} />
+            </DropdownItem>
+            <DropdownItem key="view-tasks">
+              <ViewTasks data={data.row.original} />
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
@@ -123,6 +122,16 @@ function DeleteUser({ data }: { data: IUser }) {
     <div className="flex items-center gap-2" onClick={handleDelete}>
       <Trash2 className="h-4 w-4" />
       Delete
+    </div>
+  );
+}
+
+function ViewTasks({ data }: { data: IUser }) {
+  const navigate = useNavigate();
+  return (
+    <div className="flex items-center gap-2" onClick={() => navigate(`${ROUTE_TASKS}?employee_id=${data.id}`)}>
+      <FileSliders className="h-4 w-4" />
+      Manage Tasks
     </div>
   );
 }

@@ -1,7 +1,9 @@
+import { Request } from 'express';
+import { UserRole } from '@shared/constants';
 import { AdminProtect, FormattedResponse, Protect } from '@/middleware';
 import { ERRORS as AUTH_ERRORS } from '@/modules/auth/constants';
 import { QuerySchema, UUIDSchema } from '@/utils';
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ERRORS } from '../../constants';
 import { Task } from '../../models';
@@ -47,8 +49,11 @@ export class TaskController {
 
   @Patch(':id')
   @UseGuards(SelfGuard)
-  async updateTaskById(@Param() params: UUIDSchema, @Body() payload: UpdateTaskSchema) {
-    if (Object.keys(payload).length > 1 || Object.keys(payload)[0] !== 'completed') {
+  async updateTaskById(@Req() req: Request, @Param() params: UUIDSchema, @Body() payload: UpdateTaskSchema) {
+    if (
+      req.user!.role === UserRole.Employee &&
+      (Object.keys(payload).length > 1 || Object.keys(payload)[0] !== 'completed')
+    ) {
       throw AUTH_ERRORS.FORBIDDEN_ACTION;
     }
     const task = await this.service.updateById(params.id, payload);

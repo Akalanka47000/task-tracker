@@ -20,10 +20,11 @@ export class CustomRepository<Entity extends ObjectLiteral> extends Repository<E
       opts.where = options.filter;
     }
 
-    opts.order = {
-      created_at: 'DESC',
-      ...options.sort
-    };
+    opts.order = options.sort || {};
+
+    if (!Object.keys(opts.order).length) {
+      (opts.order as any).created_at = 'DESC';
+    }
 
     if (!options.page) {
       return this.find(opts);

@@ -1,6 +1,6 @@
 import { default as context } from 'express-http-context';
 import { ctxUser, UserRole } from '@shared/constants';
-import { DeepPartial, Repository } from 'typeorm';
+import { DeepPartial, ILike, Repository } from 'typeorm';
 import { CustomRepository } from '@/database/postgres';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -20,6 +20,10 @@ export class TaskRepository extends CustomRepository<Task> {
     const user: IUser = context.get(ctxUser);
     if (user.role === UserRole.Employee) {
       opts.filter = { ...opts.filter, employee: { id: user.id } };
+      delete opts.filter.employee_id;
+    }
+    if (opts.filter?.name) {
+      opts.filter.name = ILike(`%${opts.filter.name}%`);
     }
     return this.paginate(opts);
   }
