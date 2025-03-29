@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsNotEmpty, IsNumber, IsObject, IsOptional, IsUUID } from 'class-validator';
-import { FindOptionsWhere, OrderByCondition } from 'typeorm';
+import { FindOptionsOrder, FindOptionsWhere } from 'typeorm';
 
 export class UUIDSchema {
   @IsUUID()
@@ -15,7 +15,7 @@ export class QuerySchema<T> {
 
   @IsOptional()
   @IsObject()
-  sort?: OrderByCondition;
+  sort?: FindOptionsOrder<T>;
 
   @IsNumber()
   @IsNotEmpty()

@@ -13,7 +13,7 @@
     "typeorm": "TYPEORM_CLI=true ts-node -T -P ./tsconfig.json -r tsconfig-paths/register ../node_modules/typeorm/cli.js --dataSource ./src/database/postgres/index.ts",
     "migration:generate": "sh ./scripts/migration-generate.sh",
     "migration:create": "sh ./scripts/migration-create.sh",
-    "migrate": "pnpm build && npm run typeorm migration:run",
+    "migrate": "npm run typeorm migration:run",
     "rollback": "npm run typeorm migration:revert",
     "seed": "ts-node -T -P ./tsconfig.json -r tsconfig-paths/register ./node_modules/typeorm-extension/bin/cli.cjs --dataSource ./src/database/postgres/index.ts seed:run"
   },

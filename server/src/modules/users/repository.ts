@@ -21,7 +21,7 @@ export class UserRepository extends CustomRepository<User> {
     return User.cleanse(user);
   }
 
-  findAll(opts: QueryOptions) {
+  findAll(opts: QueryOptions<User>) {
     return this.paginate(opts);
   }
 

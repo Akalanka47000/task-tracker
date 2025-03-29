@@ -1,4 +1,5 @@
 import Polyglot from 'node-polyglot';
+import { FindOptionsOrder, type FindOptionsWhere } from 'typeorm';
 
 declare global {
   namespace Express {
@@ -11,9 +12,9 @@ declare global {
     }
   }
 
-  export interface QueryOptions {
-    filter?: Record<string, any>;
-    sort?: Record<string, any>;
+  export interface QueryOptions<T> {
+    filter?: FindOptionsWhere<T>;
+    sort?: FindOptionsOrder<T>;
     page?: number;
     limit?: number;
   }

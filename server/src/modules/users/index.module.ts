@@ -9,18 +9,6 @@ import { UserRepository } from './repository';
   imports: [TypeOrmModule.forFeature([User])],
   controllers: [ControllerV1],
   providers: [ServiceV1, UserRepository],
-  exports: [TypeOrmModule]
+  exports: [TypeOrmModule, ServiceV1, UserRepository]
 })
-export class UserModule {
-  static services() {
-    return [ServiceV1];
-  }
-
-  static repositories() {
-    return [UserRepository];
-  }
-
-  static providers() {
-    return [...this.services(), ...this.repositories()];
-  }
-}
+export class UserModule {}
