@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, TableProps, TableHeaderProps, TableBodyProps, DropdownTrigger, Dropdown, DropdownMenu, DropdownItem } from "@heroui/react";
 import {
   ArrowDown,
   ArrowUp,
@@ -9,17 +10,8 @@ import {
   ChevronsUpDown,
   Loader2
 } from 'lucide-react';
-import {
-  Button,
-  Skeleton,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/components';
-import { LIMIT, LIMIT_10, PAGE } from '@/constants';
+import { Button, Skeleton } from '@/components';
+import { LIMIT, LIMIT_8, PAGE } from '@/constants';
 import { cn } from '@/utils';
 import { UseQueryResult } from '@tanstack/react-query';
 import {
@@ -48,9 +40,9 @@ export interface DataTableProps {
   /** A react component which will render on the top right side of the table */
   endComponent?: React.ReactNode;
   tableProps?: {
-    root?: React.HTMLProps<HTMLTableElement>;
-    header?: React.HTMLProps<HTMLTableSectionElement>;
-    body?: React.HTMLProps<HTMLTableSectionElement>;
+    root?: Partial<TableProps>;
+    header?: Partial<TableHeaderProps<HTMLTableSectionElement>>;
+    body?: Partial<TableBodyProps<HTMLTableSectionElement>>;
   };
 }
 
@@ -58,7 +50,7 @@ export function DataTable({
   columns,
   filters,
   useDataFetcher,
-  pageSize = LIMIT_10,
+  pageSize = LIMIT_8,
   paginate = true,
   className,
   filterContainerClassName,
@@ -133,26 +125,20 @@ export function DataTable({
               {endComponent}
             </div>
           </div>
-          <div className="rounded-md border border-border/60">
+          <div className="rounded-md">
             <Table {...tableProps?.root}>
               <TableHeader {...tableProps?.header}>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => {
-                      const meta = header.column.columnDef.meta as any;
-                      return (
-                        <TableHead
-                          key={header.id}
-                          className={cn('px-4', meta?.headerClassName, meta?.className)}
-                          style={{ minWidth: `${header.column.columnDef.minSize}px` }}>
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(header.column.columnDef.header, header.getContext())}
-                        </TableHead>
-                      );
-                    })}
-                  </TableRow>
-                ))}
+                {table.getFlatHeaders().map((header) => {
+                  const meta = header.column.columnDef.meta as any;
+                  return <TableColumn
+                    key={header.id}
+                    className={cn('px-4', meta?.headerClassName, meta?.className)}
+                    style={{ minWidth: `${header.column.columnDef.minSize}px` }}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(header.column.columnDef.header, header.getContext())}
+                  </TableColumn>
+                })}
               </TableHeader>
               <TableBody {...tableProps?.body}>
                 {isLoading &&
@@ -162,8 +148,8 @@ export function DataTable({
                         <Skeleton className="w-full h-8" />
                       </TableCell>
                     </TableRow>
-                  ))}
-                {!isLoading &&
+                  )) as any}
+                {!isLoading ?
                   (table.getRowModel().rows?.length ? (
                     table.getRowModel().rows.map((row) => (
                       <TableRow
@@ -186,48 +172,49 @@ export function DataTable({
                         No results.
                       </TableCell>
                     </TableRow>
-                  ))}
+                  )) : <></>}
               </TableBody>
             </Table>
           </div>
         </div>
         {paginate && (
           <div className="flex items-center justify-end space-x-2">
-            {data?.docs && (
-              <div className="flex-1 text-sm text-muted-foreground">
-                Page {table.getState().pagination.pageIndex + (table.getPageCount() ? 1 : 0)} of{' '}
-                {table.getPageCount().toLocaleString()}
-              </div>
+            {isFetching ? <Loader2 className="animate-spin" /> : (
+              data?.docs && (
+                <div className="mr-4 text-sm text-muted-foreground">
+                  Page {table.getState().pagination.pageIndex + (table.getPageCount() ? 1 : 0)} of{' '}
+                  {table.getPageCount().toLocaleString()}
+                </div>
+              )
             )}
-            <div className="space-x-2 flex gap-2 mb-4 items-center">
-              {isFetching && <Loader2 className="animate-spin" />}
+            <div className="h-full flex gap-4 items-center">
               <Button
-                variant="ghost"
+                variant="flat"
                 size="sm"
-                className="gap-2 w-8 h-8 p-0"
+                className="rounded-full w-8 min-w-8 p-0"
                 onClick={() => table.firstPage()}
                 disabled={!table.getCanPreviousPage()}>
                 <ChevronsLeft className="h-4 w-4" />
               </Button>
               <Button
-                variant="ghost"
+                variant="solid"
                 size="sm"
-                className="gap-2 w-8 h-8 p-0"
+                className="rounded-full w-8 min-w-8 p-0"
                 onClick={() => table.previousPage()}
                 disabled={!table.getCanPreviousPage()}>
                 <ChevronLeft className="h-4 w-4" />
               </Button>
               <Button
-                variant="ghost"
-                className="gap-2 w-8 h-8 p-0"
+                variant="solid"
+                className="rounded-full w-8 min-w-8 p-0"
                 size="sm"
                 onClick={() => table.nextPage()}
                 disabled={!table.getCanNextPage()}>
                 <ChevronRight className="h-4 w-4" />
               </Button>
               <Button
-                variant="ghost"
-                className="gap-2 w-8 h-8 p-0"
+                variant="flat"
+                className="rounded-full w-8 min-w-8 p-0"
                 size="sm"
                 onClick={() => table.lastPage()}
                 disabled={!table.getCanNextPage()}>
@@ -254,37 +241,37 @@ export function DataTableColumnHeader<TData, TValue>({
   if (!column.getCanSort()) {
     return <div className={cn(className)}>{title}</div>;
   }
-  // const iconClassName = 'ml-1.5 h-4 w-4';
-  // const meta = column?.columnDef?.meta as any;
-  // return (
-  //   <div className={cn('flex items-center space-x-2', className, meta?.headerClassName, meta?.className)}>
-  //     <DropdownMenu>
-  //       <DropdownMenuTrigger asChild>
-  //         <Button
-  //           variant="ghost"
-  //           size="sm"
-  //           className=" h-8 data-[state=open]:bg-accent ring-transparent focus-visible:ring-0 focus-visible:ring-offset-0">
-  //           <span>{title}</span>
-  //           {column.getIsSorted() === 'desc' ? (
-  //             <ArrowDown className={iconClassName} />
-  //           ) : column.getIsSorted() === 'asc' ? (
-  //             <ArrowUp className={iconClassName} />
-  //           ) : (
-  //             <ChevronsUpDown className={iconClassName} />
-  //           )}
-  //         </Button>
-  //       </DropdownMenuTrigger>
-  //       <DropdownMenuContent align="center" className="min-w-[5rem]">
-  //         <DropdownMenuItem onClick={() => column.toggleSorting(false)} className="flex justify-center">
-  //           Asc
-  //         </DropdownMenuItem>
-  //         <DropdownMenuItem onClick={() => column.toggleSorting(true)} className="flex justify-center">
-  //           Desc
-  //         </DropdownMenuItem>
-  //       </DropdownMenuContent>
-  //     </DropdownMenu>
-  //   </div>
-  // );
+  const iconClassName = 'ml-1.5 h-4 w-4';
+  const meta = column?.columnDef?.meta as any;
+  return (
+    <div className={cn('flex items-center space-x-2', className, meta?.headerClassName, meta?.className)}>
+      <Dropdown>
+        <DropdownTrigger asChild>
+          <Button
+            variant="flat"
+            size="sm"
+            className=" h-6 data-[state=open]:bg-accent ring-transparent focus-visible:ring-0 focus-visible:ring-offset-0">
+            <span>{title}</span>
+            {column.getIsSorted() === 'desc' ? (
+              <ArrowDown className={iconClassName} />
+            ) : column.getIsSorted() === 'asc' ? (
+              <ArrowUp className={iconClassName} />
+            ) : (
+              <ChevronsUpDown className={iconClassName} />
+            )}
+          </Button>
+        </DropdownTrigger>
+        <DropdownMenu className="min-w-[5rem]">
+          <DropdownItem key="asc" onClick={() => column.toggleSorting(false)} className="flex justify-center">
+            Asc
+          </DropdownItem>
+          <DropdownItem key="desc" onClick={() => column.toggleSorting(true)} className="flex justify-center">
+            Desc
+          </DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
+    </div>
+  );
 }
 
 export default DataTable;

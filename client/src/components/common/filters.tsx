@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { default as debounce } from 'lodash/debounce';
-import { Check, ChevronsUpDown  } from 'lucide-react';
+import { Check, ChevronsUpDown } from 'lucide-react';
 import { Button, Input } from '@/components';
 import { CASE_INSENSITIVE_REGEX, dataAttributes, EQ, FILTER, SECONDARY_FILTER } from '@/constants';
 import { useMediaQuery } from '@/hooks';
@@ -62,7 +62,7 @@ export function FilterContent({
     drawer
   ]);
 
-  return <></>
+  return <></>;
 
   // return (
   //   <div className={cn('w-full flex flex-col justify-start items-center gap-6', styles.root)}>
@@ -176,20 +176,19 @@ export function Filters({ drawer, definitions, setFilters, ...props }: FilterPro
       setFiltersLocalState(JSON.parse(JSON.stringify(definitions)));
     }
   }, [definitions, filtersLocalState]);
-  
-    return (
-      <FilterContent
-        {...props}
-        styles={{
-          ...props.styles,
-          root: cn(props.styles?.root, 'md:flex-row'),
-          filter: cn(props.styles?.filter, 'max-w-sm self-start')
-        }}
-        filtersLocalState={filtersLocalState}
-        setFiltersLocalState={setFiltersLocalState}
-      />
-    );
 
+  return (
+    <FilterContent
+      {...props}
+      styles={{
+        ...props.styles,
+        root: cn(props.styles?.root, 'md:flex-row'),
+        filter: cn(props.styles?.filter, 'max-w-sm self-start')
+      }}
+      filtersLocalState={filtersLocalState}
+      setFiltersLocalState={setFiltersLocalState}
+    />
+  );
 }
 
 export default Filters;

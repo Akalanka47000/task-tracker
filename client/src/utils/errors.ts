@@ -25,9 +25,9 @@ export function filterErrors(error: ReturnType<typeof formatError>) {
 export const errTryAgainLater = 'Something went wrong! Please, try again later';
 
 export function filterAndNotifyError(e: ReturnType<typeof formatError>): void {
-  addToast({ title: filterErrors(e) ?? 'Something went wrong!', color:"danger"});
+  addToast({ title: filterErrors(e) ?? 'Something went wrong!', color: 'danger' });
 }
 
 export function filterAndNotifyRetryError(e: ReturnType<typeof formatError>) {
-  addToast({ title:filterErrors(e) ?? errTryAgainLater, color:"danger"});
+  addToast({ title: filterErrors(e) ?? errTryAgainLater, color: 'danger' });
 }

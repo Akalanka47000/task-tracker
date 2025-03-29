@@ -2,7 +2,7 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 import { ROUTE_HOME, ROUTE_LOGIN } from '@/constants';
 import { NotFound } from './404';
 import { Login } from './auth';
-import { Home } from './home';
+import { default as Home } from './home';
 
 const Pages = () => {
   const location = useLocation();

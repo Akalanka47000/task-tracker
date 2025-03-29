@@ -18,11 +18,12 @@ export const service = 'Task Tracker Service';
 const logger = moduleLogger(service);
 
 async function bootstrap() {
-
-  const app = await NestFactory.create(AppModule, { cors: {
-    origin: Config.FRONTEND_BASE_URL,
-    credentials: true
-  } });
+  const app = await NestFactory.create(AppModule, {
+    cors: {
+      origin: Config.FRONTEND_BASE_URL,
+      credentials: true
+    }
+  });
 
   app.setGlobalPrefix('api', { exclude: ['system/*'] });
 

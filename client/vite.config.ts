@@ -1,5 +1,5 @@
+import { default as tsconfigPaths } from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
-import { default as tsconfigPaths} from 'vite-tsconfig-paths'
 import { default as react } from '@vitejs/plugin-react-swc';
 
 // https://vite.dev/config/

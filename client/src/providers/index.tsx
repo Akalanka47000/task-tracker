@@ -1,5 +1,5 @@
+import { useHref, useNavigate } from 'react-router-dom';
 import { HeroUIProvider, ToastProvider } from '@heroui/react';
-import { useHref, useNavigate } from "react-router-dom";
 import { default as QueryClientProvider } from './query-client';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
@@ -8,7 +8,10 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     <QueryClientProvider>
       <HeroUIProvider navigate={navigate} useHref={useHref}>
         {children}
-        <ToastProvider />
+        <ToastProvider
+          toastProps={{
+            timeout: 3000,
+          }} />
       </HeroUIProvider>
     </QueryClientProvider>
   );

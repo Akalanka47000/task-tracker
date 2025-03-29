@@ -41,16 +41,9 @@ const useFormField = () => {
   };
 };
 
-const FormInput = React.forwardRef<HTMLInputElement, React.ComponentProps<typeof Input>>(
-  (props, ref) => {
-    const { error } = useFormField();
-    return <Input
-      ref={ref}
-      errorMessage={error?.message}
-      isInvalid={!!error?.message}
-      {...props}
-    />
-  }
-);
+const FormInput = React.forwardRef<HTMLInputElement, React.ComponentProps<typeof Input>>((props, ref) => {
+  const { error } = useFormField();
+  return <Input ref={ref} errorMessage={error?.message} isInvalid={!!error?.message} {...props} />;
+});
 
 export { useFormField, Form, FormInput, FormField };

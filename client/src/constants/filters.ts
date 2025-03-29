@@ -19,7 +19,3 @@ export const CASE_INSENSITIVE_REGEX = 'reg(:value...[i])';
 export const PAGE = 'page';
 export const LIMIT = 'limit';
 export const LIMIT_8 = 8;
-export const LIMIT_10 = 10;
-export const LIMIT_12 = 12;
-export const LIMIT_15 = 15;
-export const LIMIT_20 = 20;

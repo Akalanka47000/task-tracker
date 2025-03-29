@@ -7,11 +7,9 @@ export function Layout({ className, children, ...props }: HTMLProps<HTMLElement>
   return (
     <>
       <Header />
-      <main className={cn(
-        'w-full overflow-x-hidden min-h-[80svh] flex flex-col justify-center items-center', className
-      )}
-      {...props}
-      >
+      <main
+        className={cn('w-full overflow-x-hidden min-h-[80svh] flex flex-col justify-center items-center', className)}
+        {...props}>
         {children}
       </main>
       <Footer />
