@@ -17,7 +17,7 @@ export const service = 'Task Tracker Service';
 
 const logger = moduleLogger(service);
 
-async function bootstrap() {
+export async function createApplication() {
   const app = await NestFactory.create(AppModule, {
     cors: {
       origin: Config.FRONTEND_BASE_URL,
@@ -64,6 +64,11 @@ async function bootstrap() {
 
   app.use(responseInterceptor);
 
+  return app;
+}
+
+async function bootstrap() {
+  const app = await createApplication();
   await app.listen(Config.PORT, Config.HOST, () => {
     logger.info(`server listening on ${Config.HOST}:${Config.PORT}`);
   });

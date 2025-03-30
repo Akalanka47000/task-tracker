@@ -3,6 +3,8 @@ import { moduleLogger } from '@sliit-foss/module-logger';
 
 const logger = moduleLogger('Config');
 
+console.log(process.env.DB_URL);
+
 export enum Enviroment {
   Production = 'Production',
   Development = 'Development',

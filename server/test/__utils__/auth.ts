@@ -1,12 +1,12 @@
-import { Express } from 'express';
 import { default as request } from 'supertest';
+import { App } from 'supertest/types';
 import { mockAdminCredentials, mockEmployeeCredentials } from '../__mocks__';
 
 const extractCookie = (cookie: string) => {
   return `access_token=${cookie.split('=')[1].split(';')[0]}`;
 };
 
-export const adminSessionCookie = async (app: Express, credentials?: Pick<IUser, 'username' | 'password'>) => {
+export const adminSessionCookie = async (app: App, credentials?: Pick<IUser, 'username' | 'password'>) => {
   const res = await request(app)
     .post('/api/v1/auth/login')
     .send(
@@ -18,7 +18,7 @@ export const adminSessionCookie = async (app: Express, credentials?: Pick<IUser,
   return extractCookie(res.headers['set-cookie'][0]);
 };
 
-export const employeeSessionCookie = async (app: Express, credentials?: Pick<IUser, 'username' | 'password'>) => {
+export const employeeSessionCookie = async (app: App, credentials?: Pick<IUser, 'username' | 'password'>) => {
   const res = await request(app)
     .post('/api/v1/auth/login')
     .send(

@@ -6,8 +6,8 @@ import exec from '@sliit-foss/actions-exec-wrapper';
  * @param port The default and exposed port of the container
  */
 export const runDockerContainer = (image: string, port: number, args: string = '') => {
-  exec(
-    `sh -c "docker rm -f ${image} >/dev/null 2>&1 && docker run -d --name ${image} ${args} -p ${port}:${port} ${image} >/dev/null 2>&1"`
+  return exec(
+    `sh -c "docker rm -f ${image} || true >/dev/null 2>&1 && docker run -d --name ${image} ${args} -p ${port}:${port} ${image}"`
   );
 };
 
@@ -16,5 +16,5 @@ export const runDockerContainer = (image: string, port: number, args: string = '
  * @param name The name of the container to remove
  */
 export const removeDockerContainer = (name: string) => {
-  exec(`sh -c "docker rm -f ${name} >/dev/null 2>&1"`);
+  return exec(`sh -c "docker rm -f ${name} >/dev/null 2>&1"`);
 };

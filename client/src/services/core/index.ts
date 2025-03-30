@@ -14,8 +14,8 @@ instance.interceptors.request.use((req) => {
     req.headers[headers.correlationId] = window.crypto.randomUUID();
     const profile = useAuthStore.getState().profile;
     if (profile) {
-      req.headers[headers.userId] = profile._id;
-      req.headers[headers.userEmail] = profile.email;
+      req.headers[headers.userId] = profile.id;
+      req.headers[headers.userUsername] = profile.username;
     }
   }
   return req;
