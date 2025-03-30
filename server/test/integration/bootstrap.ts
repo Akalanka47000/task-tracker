@@ -12,7 +12,9 @@ dotenv.config({ path: '.env.test' });
 
 process.env.DISABLE_FUNCTION_TRACING = 'true';
 
-let app: INestApplication<App>;
+let _app: INestApplication<App>;
+
+export const app = () => _app.getHttpServer();
 
 export default async () => {
   await Promise.all([
@@ -28,9 +30,9 @@ export default async () => {
     imports: [AppModule]
   }).compile();
 
-  app = moduleFixture.createNestApplication();
+  _app = moduleFixture.createNestApplication();
 
-  await app.init();
+  await _app.init();
 
   await dataSource.initialize();
 
