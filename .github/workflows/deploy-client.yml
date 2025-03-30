@@ -1,11 +1,11 @@
-name: CI Client Firebase deploy
+name: Client Firebase deploy
 
 on:
   push:
     branches:
       - main
   workflow_dispatch:
-    
+
 jobs:
   deploy:
     name: Deploy to firebase

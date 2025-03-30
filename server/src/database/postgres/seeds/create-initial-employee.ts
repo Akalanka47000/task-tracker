@@ -1,4 +1,4 @@
-import { UserRole } from '@shared/constants';
+import { EmployeeDepartment, UserRole } from '@shared/constants';
 import { default as bcrypt } from 'bcryptjs';
 import { DataSource } from 'typeorm';
 import { Seeder } from 'typeorm-extension';
@@ -16,7 +16,10 @@ export default class CreateInitialEmployee implements Seeder {
       last_name: faker.person.lastName(),
       username: 'employee1',
       password: bcrypt.hashSync('Ecvb841@2#secret', Config.SALT_ROUNDS),
-      role: UserRole.Employee
+      role: UserRole.Employee,
+      details: {
+        department: EmployeeDepartment.Sales
+      }
     });
   }
 }
