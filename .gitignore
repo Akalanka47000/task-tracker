@@ -52,3 +52,5 @@ public/sw*
 public/swe-worker*
 
 dump.rdb
+
+!.github/actions/build
