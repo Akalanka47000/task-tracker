@@ -82,7 +82,7 @@ export function EmployeeInsights() {
         startContent={<ChartNoAxesCombined className="w-6 h-6" />}>
         Employee Insights
       </Chip>
-      {(!isLoading && !isFetching) && !docs.length ? (
+      {!isLoading && !isFetching && !docs.length ? (
         <PackageOpen className="mt-12 stroke-[1px]" size={150} data-testid={testIds.noEmployeeInsightsIndicator} />
       ) : (
         <div
