@@ -1,0 +1,31 @@
+name: CI Client Firebase deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    
+jobs:
+  deploy:
+    name: Deploy to firebase
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository 🛎️
+        uses: actions/checkout@v3
+
+      - name: Build 🏗️
+        uses: ./.github/actions/build
+        env:
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
+        with:
+          workspace: client
+
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PLAYGROUND_6D807 }}
+          channelId: live
+          projectId: playground-6d807
+          entryPoint: ./client
+  
