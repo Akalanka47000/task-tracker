@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { default as debounce } from 'lodash/debounce';
 import { Input } from '@/components';
-import { dataAttributes, FILTER } from '@/constants';
+import { FILTER } from '@/constants';
 import { FilterContentProps, FilterDefinition, FilterProps } from '@/types';
 import { cn } from '@/utils';
 import { Select, SelectItem } from '@heroui/react';
@@ -71,7 +71,7 @@ export function FilterContent({
                   name={filter.key}
                   type={filter.inputType}
                   onChange={onFilterChange}
-                  {...{ [dataAttributes.testId]: `filter-${filter.key}` }}
+                  data-testid={`filter-${filter.key}`}
                 />
               )}
             </div>

@@ -1,7 +1,6 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button, Form } from '@/components/common';
-import { dataAttributes } from '@/constants';
 import { taskService } from '@/services';
 import { useTaskStore } from '@/store/task';
 import { cn, filterAndNotifyError, filterDirtyFields } from '@/utils';
@@ -71,7 +70,7 @@ function CreateOrUpdateDialogContent({ employeeId }: { employeeId?: string | nul
   };
 
   return (
-    <ModalContent {...{ [dataAttributes.testId]: testIds.createDialog }}>
+    <ModalContent data-testid={testIds.createDialog}>
       {(onClose) => (
         <>
           <Form {...form}>

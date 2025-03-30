@@ -1,7 +1,6 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button, Form } from '@/components/common';
-import { dataAttributes } from '@/constants';
 import { userService } from '@/services';
 import { useUserStore } from '@/store/user';
 import { cn, filterAndNotifyError, filterDirtyFields } from '@/utils';
@@ -71,7 +70,7 @@ function CreateOrUpdateDialogContent() {
   };
 
   return (
-    <ModalContent {...{ [dataAttributes.testId]: testIds.createDialog }}>
+    <ModalContent data-testid={testIds.createDialog}>
       {(onClose) => (
         <>
           <Form {...form}>

@@ -46,8 +46,9 @@ export function TaskTable({ employeeId }: { employeeId?: string | null }) {
         endComponent={
           profile?.role === UserRole.Administrator && (
             <Button
-              {...{ [dataAttributes.testId]: testIds.createButton }}
-              onPress={() => openTaskDialogWithSelector(undefined)}>
+              onPress={() => openTaskDialogWithSelector(undefined)}
+              data-testid={testIds.createButton}
+              >
               Add Task
             </Button>
           )

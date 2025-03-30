@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Button, DataTable, Filters } from '@/components';
-import { dataAttributes } from '@/constants';
 import { useGetEmployees } from '@/hooks';
 import { useUserStore } from '@/store/user';
 import { columns } from './columns';
 import { testIds as createDialogTestIds, default as CreateOrUpdateDialog } from './create-dialog';
 import { default as DeleteDialog } from './delete';
+import { dataAttributes } from '@/constants';
 
 export const testIds = {
   ...createDialogTestIds,
@@ -39,8 +39,9 @@ export function EmployeeTable() {
         }}
         endComponent={
           <Button
-            {...{ [dataAttributes.testId]: testIds.createButton }}
-            onPress={() => openUserDialogWithSelector(undefined)}>
+            onPress={() => openUserDialogWithSelector(undefined)}
+            data-testid={testIds.createButton}
+          >
             Add Employee
           </Button>
         }
