@@ -84,13 +84,13 @@ export const columns: ColumnDef<IUser>[] = [
             </Button>
           </DropdownTrigger>
           <DropdownMenu>
-            <DropdownItem key="edit" className='p-0'>
+            <DropdownItem key="edit" className="p-0">
               <EditUser data={data.row.original} />
             </DropdownItem>
-            <DropdownItem key="delete" className='p-0'>
+            <DropdownItem key="delete" className="p-0">
               <DeleteUser data={data.row.original} />
             </DropdownItem>
-            <DropdownItem key="view-tasks" className='p-0'>
+            <DropdownItem key="view-tasks" className="p-0">
               <ViewTasks data={data.row.original} />
             </DropdownItem>
           </DropdownMenu>

@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
+import { Link } from 'react-router-dom';
 import { ChartNoAxesCombined, Loader2, PackageOpen } from 'lucide-react';
 import { FILTER, LIMIT_9, ROUTE_TASKS } from '@/constants';
 import { useGetEmployeeInsights } from '@/hooks';
 import { useAnalyticsStore } from '@/store/analytics';
 import { cn } from '@/utils';
 import { Chip, Progress } from '@heroui/react';
-import { Link } from 'react-router-dom';
 
 export const testIds = {
   employeeInsights: 'employee-insights',
@@ -21,26 +21,26 @@ interface EmployeeInsightCardProps extends React.HTMLAttributes<HTMLDivElement> 
 function EmployeeInsightCard({ className, insight, ...props }: EmployeeInsightCardProps) {
   return (
     <Link to={`${ROUTE_TASKS}?employee_id=${insight.id}`}>
-    <div
-      className={cn(
-        'w-full h-full flex flex-col justify-center items-center rounded-md border bg-primary/10 hover:bg-primary/15 border-white/40 gap-0.5 p-6 py-3 cursor-pointer transition-all duration-300',
-        className
-      )}
-      {...props}>
-      <h5 className="mb-1">
-        {insight.first_name} {insight.last_name} ({insight.details.department || 'N/A'})
-      </h5>
+      <div
+        className={cn(
+          'w-full h-full flex flex-col justify-center items-center rounded-md border bg-primary/10 hover:bg-primary/15 border-white/40 gap-0.5 p-6 py-3 cursor-pointer transition-all duration-300',
+          className
+        )}
+        {...props}>
+        <h5 className="mb-1">
+          {insight.first_name} {insight.last_name} ({insight.details.department || 'N/A'})
+        </h5>
 
-      <Progress value={insight.completion_percentage} className="my-1.5 h-1.5" />
+        <Progress value={insight.completion_percentage} className="my-1.5 h-1.5" />
 
-      <span className="mb-1.5 text-center">
-        Completed Tasks: {insight.completed_tasks} / {insight.total_tasks}
-      </span>
+        <span className="mb-1.5 text-center">
+          Completed Tasks: {insight.completed_tasks} / {insight.total_tasks}
+        </span>
 
-      <Chip color={insight.overdue_tasks ? 'danger' : 'success'} variant="flat" className="text-xs sm:text-sm">
-        {insight.overdue_tasks || 'No'} Task{insight.overdue_tasks === 1 ? '' : 's'} Overdue
-      </Chip>
-    </div>
+        <Chip color={insight.overdue_tasks ? 'danger' : 'success'} variant="flat" className="text-xs sm:text-sm">
+          {insight.overdue_tasks || 'No'} Task{insight.overdue_tasks === 1 ? '' : 's'} Overdue
+        </Chip>
+      </div>
     </Link>
   );
 }

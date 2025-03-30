@@ -112,13 +112,13 @@ export const columns: ColumnDef<ITask>[] = [
             </Button>
           </DropdownTrigger>
           <DropdownMenu>
-            <DropdownItem key="edit" className='p-0'>
+            <DropdownItem key="edit" className="p-0">
               <EditTask data={data.row.original} />
             </DropdownItem>
-            <DropdownItem key="delete" className='p-0'>
+            <DropdownItem key="delete" className="p-0">
               <DeleteTask data={data.row.original} />
             </DropdownItem>
-            <DropdownItem key="mark-as-complete" className='p-0'>
+            <DropdownItem key="mark-as-complete" className="p-0">
               <MarkTaskAsCompleted data={data.row.original} />
             </DropdownItem>
           </DropdownMenu>
