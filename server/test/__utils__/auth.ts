@@ -29,3 +29,12 @@ export const employeeSessionCookie = async (app: App, credentials?: Pick<IUser, 
     );
   return extractCookie(res.headers['set-cookie'][0]);
 };
+
+export const getEmployee = async (app: App) => {
+  const res = await request(app).post('/api/v1/auth/login').send({
+    username: mockEmployeeCredentials.username,
+    password: mockEmployeeCredentials.password
+  });
+  console.log(res.body, 234);
+  return res.body.data;
+};

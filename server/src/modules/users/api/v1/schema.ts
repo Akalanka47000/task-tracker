@@ -4,8 +4,8 @@ import { IsEnum, IsNotEmpty, IsObject, IsOptional, IsString, ValidateIf, Validat
 import { OmitType, PartialType } from '@nestjs/swagger';
 
 class EmployeeDetailsSchema {
-  @IsNotEmpty()
   @IsEnum(EmployeeDepartment)
+  @IsNotEmpty()
   department: EmployeeDepartment;
 }
 

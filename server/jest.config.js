@@ -11,5 +11,5 @@ module.exports = {
     ...pathsToModuleNameMapper(compilerOptions.paths, { prefix: `<rootDir>/src` }),
     '@shared/constants': '<rootDir>/../packages/constants/src/index.ts'
   },
-  coveragePathIgnorePatterns: ['<rootDir>/test']
+  coveragePathIgnorePatterns: ['<rootDir>/test', '<rootDir>/src/database/migrations', '<rootDir>/src/database/seeds']
 };
