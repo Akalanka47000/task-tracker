@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   ArrowDown,
   ArrowUp,
@@ -30,6 +30,8 @@ import {
 import { UseQueryResult } from '@tanstack/react-query';
 import {
   Column,
+  ColumnDef,
+  ColumnSort,
   flexRender,
   getCoreRowModel,
   PaginationState,
@@ -39,7 +41,7 @@ import {
 } from '@tanstack/react-table';
 
 export interface DataTableProps {
-  columns: any[];
+  columns: ColumnDef<any>[];
   filters?: React.ReactNode;
   useDataFetcher: {
     fn: <T>(...args: any[]) => UseQueryResult<PaginatedResult<T>>;
@@ -73,8 +75,26 @@ export function DataTable({
   tableProps
 }: DataTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+
   const [rowSelection, setRowSelection] = useState({});
-  const [sorting, setSorting] = useState<SortingState>([]);
+
+  const initialSortingState = useMemo(() => {
+    const defaultSortColumns: (ColumnSort & { priority: number })[] = [];
+    columns.forEach((c) => {
+      if ((c.meta as any)?.defaultSort) {
+        defaultSortColumns.push({
+          id: (c as any).accessorKey,
+          desc: (c.meta as any).defaultSort === 'DESC',
+          priority: (c.meta as any).defaultSortPriority
+        });
+      }
+    });
+    defaultSortColumns.sort((a, b) => b.priority - a.priority);
+    return defaultSortColumns as SortingState;
+  }, []);
+
+  const [sorting, setSorting] = useState<SortingState>(initialSortingState);
+
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize
@@ -118,6 +138,7 @@ export function DataTable({
     rowCount: data?.totalDocs ?? (data as any)?.length ?? 0,
     onPaginationChange: setPagination,
     manualPagination: true,
+    isMultiSortEvent: () => true,
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
@@ -258,12 +279,6 @@ export function DataTableColumnHeader<TData, TValue>({
   title,
   className
 }: DataTableColumnHeaderProps<TData, TValue>) {
-  useEffect(() => {
-    if (column.getCanSort() && (column.columnDef.meta as any)?.defaultSort) {
-      column.toggleSorting();
-    }
-  }, []);
-
   if (!column.getCanSort()) {
     return <div className={cn(className)}>{title}</div>;
   }

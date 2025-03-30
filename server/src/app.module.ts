@@ -3,12 +3,20 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { default as dataSource } from './database/postgres';
 import { RateLimiter, Sentinel } from './middleware';
 import { AuthModule } from './modules/auth/index.module';
+import { IntelligenceModule } from './modules/intelligence/index.module';
 import { SystemModule } from './modules/system/index.module';
 import { TaskModule } from './modules/tasks/index.module';
 import { UserModule } from './modules/users/index.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(dataSource.options), AuthModule, SystemModule, TaskModule, UserModule]
+  imports: [
+    TypeOrmModule.forRoot(dataSource.options),
+    AuthModule,
+    IntelligenceModule,
+    SystemModule,
+    TaskModule,
+    UserModule
+  ]
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

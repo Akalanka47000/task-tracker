@@ -11,7 +11,8 @@ import { ColumnDef } from '@tanstack/react-table';
 export const columns: ColumnDef<ITask>[] = [
   {
     accessorKey: 'name',
-    header: 'Name'
+    header: 'Name',
+    cell: (data) => <span className={cn(data.row.original.completed && 'line-through')}>{data.row.original.name}</span>
   },
   {
     accessorKey: 'description',
@@ -38,7 +39,9 @@ export const columns: ColumnDef<ITask>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Priority" className="justify-center" />,
     cell: (data) => <PriorityBadge priority={data.row.original.priority} />,
     meta: {
-      className: 'text-center'
+      className: 'text-center',
+      defaultSort: 'DESC',
+      defaultSortPriority: 0
     },
     enableSorting: true
   },
@@ -51,7 +54,8 @@ export const columns: ColumnDef<ITask>[] = [
     },
     meta: {
       className: 'text-center',
-      defaultSort: true
+      defaultSort: 'ASC',
+      defaultSortPriority: 2
     },
     sortDescFirst: false,
     enableSorting: true
@@ -66,7 +70,9 @@ export const columns: ColumnDef<ITask>[] = [
         day: 'numeric'
       }),
     meta: {
-      className: 'text-center'
+      className: 'text-center',
+      defaultSort: 'DESC',
+      defaultSortPriority: 1
     },
     enableSorting: true
   },

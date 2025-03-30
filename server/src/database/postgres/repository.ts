@@ -13,7 +13,12 @@ export type PaginatedResult<T> = {
 };
 
 export class CustomRepository<Entity extends ObjectLiteral> extends Repository<Entity> {
-  async paginate(options: QueryOptions<Entity>) {
+  async paginate({
+    query,
+    ...options
+  }: QueryOptions<Entity> & {
+    query?: (opts: FindManyOptions<Entity>) => Promise<Entity[] | [Entity[], number]>;
+  }) {
     const opts: FindManyOptions = {};
 
     if (options.filter) {
@@ -27,7 +32,7 @@ export class CustomRepository<Entity extends ObjectLiteral> extends Repository<E
     }
 
     if (!options.page) {
-      return this.find(opts);
+      return query ? query(opts) : this.find(opts);
     }
 
     options.page = Number(options.page);
@@ -36,9 +41,9 @@ export class CustomRepository<Entity extends ObjectLiteral> extends Repository<E
     opts.take = options.limit;
     opts.skip = (options.page - 1) * opts.take;
 
-    const [data, total] = await this.findAndCount(opts);
+    const [data, total] = await (query ? query(opts) : this.findAndCount(opts));
 
-    const totalPages = Math.ceil(total / options.limit);
+    const totalPages = Math.ceil((total as number) / options.limit);
     let next: number | null = options.page + 1;
     if (next > totalPages) {
       next = null;
@@ -55,7 +60,7 @@ export class CustomRepository<Entity extends ObjectLiteral> extends Repository<E
       nextPage: next,
       prevPage: prev,
       hasPrevPage: options.page > 1,
-      hasNextPage: options.page * options.limit < total
+      hasNextPage: options.page * options.limit < (total as number)
     } as PaginatedResult<Entity>;
   }
 }
