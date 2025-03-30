@@ -12,10 +12,10 @@ runs:
       with:
         version: 9.6.0
 
-    - name: Install Node.js 18 and setup dependency caching
+    - name: Install Node.js 20 and setup dependency caching
       uses: actions/setup-node@v3
       with:
-        node-version: 18.x
+        node-version: 20.x
         cache: "pnpm"
 
     - name: Install dependencies
