@@ -298,6 +298,9 @@ importers:
       '@nestjs/testing':
         specifier: 11.0.1
         version: 11.0.1(@nestjs/common@11.0.1(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.1(@nestjs/common@11.0.1(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@11.0.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@11.0.1(@nestjs/common@11.0.1(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.1))
+      '@sliit-foss/actions-exec-wrapper':
+        specifier: 1.1.2
+        version: 1.1.2
       '@swc/cli':
         specifier: 0.6.0
         version: 0.6.0(@swc/core@1.11.13(@swc/helpers@0.5.15))(chokidar@4.0.3)
@@ -310,9 +313,6 @@ importers:
       '@types/bcryptjs':
         specifier: 2.4.6
         version: 2.4.6
-      '@types/callsite':
-        specifier: 1.0.34
-        version: 1.0.34
       '@types/compression':
         specifier: 1.7.5
         version: 1.7.5
@@ -340,9 +340,6 @@ importers:
       jest:
         specifier: 29.7.0
         version: 29.7.0(@types/node@20.5.7)(ts-node@10.9.2(@swc/core@1.11.13(@swc/helpers@0.5.15))(@types/node@20.5.7)(typescript@5.7.3))
-      prettier:
-        specifier: 3.4.2
-        version: 3.4.2
       supertest:
         specifier: 7.0.0
         version: 7.0.0
@@ -354,6 +351,12 @@ importers:
         version: 10.9.2(@swc/core@1.11.13(@swc/helpers@0.5.15))(@types/node@20.5.7)(typescript@5.7.3)
 
 packages:
+
+  '@actions/exec@1.1.1':
+    resolution: {integrity: sha512-+sCcHHbVdk93a0XT19ECtO/gIXoxvdsgQLzb2fE2/5sIZmWQuluYyjPQtrtTHdU1YzTZ7bAPN4sITq2xi1679w==}
+
+  '@actions/io@1.1.3':
+    resolution: {integrity: sha512-wi9JjgKLYS7U/z8PPbco+PvTb/nRWjeoFlJ1Qer83k/3C5PHQi28hiVdeE2kHXmIL99mQFawx8qt/JPjZilJ8Q==}
 
   '@alloc/quick-lru@5.2.0':
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
@@ -2641,6 +2644,9 @@ packages:
   '@sinonjs/fake-timers@10.3.0':
     resolution: {integrity: sha512-V4BG07kuYSUkTCSBHG8G8TNhM+F19jXFWnQtzj+we8DrkpSBCee9Z3Ms8yiGer/dlmhe35/Xdgyo3/0rQKg7YA==}
 
+  '@sliit-foss/actions-exec-wrapper@1.1.2':
+    resolution: {integrity: sha512-KuRHjtybPS5Y+5oH6n7T4QkTqpcvFcsr4QKo8iObC4HQALnNFeRFwaZNyJGkJ9QR4gDR58wv8QX9NmhRafZ3XQ==}
+
   '@sliit-foss/eslint-config-internal@1.1.6':
     resolution: {integrity: sha512-KeuJrnwwsK6TUUUstoEZz+TqsbMMPA9zA/PO3vvJPKa71WV+Az9Nq2wrd3mO+ekOTUi+aB0MsVwFUFqQjR8wNQ==}
 
@@ -2864,9 +2870,6 @@ packages:
 
   '@types/body-parser@1.19.5':
     resolution: {integrity: sha512-fB3Zu92ucau0iQ0JMCFQE7b/dv8Ot07NI3KaZIkIUNXq82k4eBAqUaneXfleGY9JWskeS9y+u0nXMyspcuQrCg==}
-
-  '@types/callsite@1.0.34':
-    resolution: {integrity: sha512-eglitkkbqiQiijtKsUvOcQm+E6qLMPcggjDJXeqNBnLxdzffRGop2+2QDN/8pHh396/jN5cmIwweNKUqKJ50mQ==}
 
   '@types/cls-hooked@4.3.9':
     resolution: {integrity: sha512-CMtHMz6Q/dkfcHarq9nioXH8BDPP+v5xvd+N90lBQ2bdmu06UvnLDqxTKoOJzz4SzIwb/x9i4UXGAAcnUDuIvg==}
@@ -6062,11 +6065,6 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  prettier@3.4.2:
-    resolution: {integrity: sha512-e9MewbtFo+Fevyuxn/4rrcDAaq0IYxPGLvObpQjiZBMAzB9IGmzlnG9RZy3FFas+eBMu2vA0CszMeduow5dIuQ==}
-    engines: {node: '>=14'}
-    hasBin: true
-
   prettier@3.5.2:
     resolution: {integrity: sha512-lc6npv5PH7hVqozBR7lkBNOGXV9vMwROAPlumdBkX0wTbbzPu/U1hk5yL8p2pt4Xoc+2mkT8t/sow2YrV/M5qg==}
     engines: {node: '>=14'}
@@ -7422,6 +7420,12 @@ packages:
         optional: true
 
 snapshots:
+
+  '@actions/exec@1.1.1':
+    dependencies:
+      '@actions/io': 1.1.3
+
+  '@actions/io@1.1.3': {}
 
   '@alloc/quick-lru@5.2.0': {}
 
@@ -10725,6 +10729,10 @@ snapshots:
     dependencies:
       '@sinonjs/commons': 3.0.1
 
+  '@sliit-foss/actions-exec-wrapper@1.1.2':
+    dependencies:
+      '@actions/exec': 1.1.1
+
   '@sliit-foss/eslint-config-internal@1.1.6': {}
 
   '@sliit-foss/functions@2.10.0':
@@ -10936,8 +10944,6 @@ snapshots:
     dependencies:
       '@types/connect': 3.4.38
       '@types/node': 20.5.7
-
-  '@types/callsite@1.0.34': {}
 
   '@types/cls-hooked@4.3.9':
     dependencies:
@@ -14703,8 +14709,6 @@ snapshots:
       xtend: 4.0.2
 
   prelude-ls@1.2.1: {}
-
-  prettier@3.4.2: {}
 
   prettier@3.5.2: {}
 
