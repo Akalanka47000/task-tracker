@@ -31,6 +31,9 @@ export class User {
   @Column({ type: 'timestamp', nullable: true })
   last_login_time?: Date;
 
+  @Column({ nullable: true })
+  fcm_token?: string;
+
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
   public created_at: Date;
 

@@ -22,7 +22,7 @@ export class JWT {
     delete user.password;
     delete user.last_login_time;
     const accessToken = jwt.sign(JSON.parse(JSON.stringify(user)), config.JWT_SECRET, {
-      expiresIn: config.ACCESS_TOKEN_EXPIRY
+      expiresIn: config.ACCESS_TOKEN_EXPIRY as any
     });
     const refreshToken = jwt.sign(
       {
@@ -30,7 +30,7 @@ export class JWT {
       },
       config.JWT_SECRET,
       {
-        expiresIn: config.REFRESH_TOKEN_EXPIRY
+        expiresIn: config.REFRESH_TOKEN_EXPIRY as any
       }
     );
     return { access_token: accessToken, refresh_token: refreshToken };

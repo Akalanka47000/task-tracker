@@ -1,5 +1,6 @@
 import { UserRole } from '@shared/constants';
 import { traced } from '@sliit-foss/functions';
+import { NotificationService } from '@/modules/notifications/api/v1/service';
 import { UserService } from '@/modules/users/api/v1/service';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,7 +14,8 @@ const layer = 'repository';
 export class TaskService {
   constructor(
     @InjectRepository(TaskRepository) private repository: TaskRepository,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly notificationService: NotificationService
   ) {}
 
   async create(task: Partial<Task>) {
@@ -21,7 +23,10 @@ export class TaskService {
     if (user?.role !== UserRole.Employee) {
       throw ERRORS.INVALID_EMPLOYEE_ID;
     }
-    return traced[layer](preserveContext(this.repository, 'save'))(task);
+    return traced[layer](preserveContext(this.repository, 'save'))(task).then((newlyCreatedTask) => {
+      this.notificationService.sendTaskAssignmentNotification(newlyCreatedTask);
+      return newlyCreatedTask;
+    });
   }
 
   getAll(retrievalOptions: QueryOptions<Task>) {
@@ -32,14 +37,19 @@ export class TaskService {
     return traced[layer](preserveContext(this.repository, 'findByID'))(id);
   }
 
-  async updateById(id: string, data: Partial<Task>) {
-    if (data.employee) {
+  async updateById(id: string, data: Partial<Task>, user: IUser) {
+    if (data.employee_id) {
       const user = await this.userService.getById(data.employee_id as string);
       if (user?.role !== UserRole.Employee) {
         throw ERRORS.INVALID_EMPLOYEE_ID;
       }
     }
-    return traced[layer](preserveContext(this.repository, 'updatebyID'))(id, data);
+    return traced[layer](preserveContext(this.repository, 'updatebyID'))(id, data).then((result) => {
+      if (user.role === UserRole.Employee && result?.completed) {
+        this.notificationService.sendTaskCompletionNotification(result);
+      }
+      return result;
+    });
   }
 
   deleteById(id: string) {

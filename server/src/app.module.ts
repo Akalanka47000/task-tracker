@@ -4,6 +4,7 @@ import { default as dataSource } from './database/postgres';
 import { RateLimiter, Sentinel } from './middleware';
 import { AuthModule } from './modules/auth/index.module';
 import { IntelligenceModule } from './modules/intelligence/index.module';
+import { NotificationModule } from './modules/notifications/index.module';
 import { SystemModule } from './modules/system/index.module';
 import { TaskModule } from './modules/tasks/index.module';
 import { UserModule } from './modules/users/index.module';
@@ -13,6 +14,7 @@ import { UserModule } from './modules/users/index.module';
     TypeOrmModule.forRoot(dataSource.options),
     AuthModule,
     IntelligenceModule,
+    NotificationModule,
     SystemModule,
     TaskModule,
     UserModule

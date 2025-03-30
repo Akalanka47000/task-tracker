@@ -26,6 +26,7 @@ export const Config = {
   REFRESH_TOKEN_EXPIRY: process.env.REFRESH_TOKEN_EXPIRY ?? '1d',
   FRONTEND_BASE_URL: process.env.FRONTEND_BASE_URL ?? 'http://localhost:5173',
   SERVICE_REQUEST_KEY: process.env.SERVICE_REQUEST_KEY,
+  FIREBASE_SERVICE_ACCOUNT: process.env.FIREBASE_SERVICE_ACCOUNT, // Base64 encoded service account contents
   HEALTH_CHECK_ACCESS_TOKEN: process.env.HEALTH_CHECK_ACCESS_TOKEN,
   ENVIRONMENT: process.env.ENVIRONMENT ?? Enviroment.Local
 };

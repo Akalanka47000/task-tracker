@@ -56,7 +56,7 @@ export class TaskController {
     ) {
       throw AUTH_ERRORS.FORBIDDEN_ACTION;
     }
-    const task = await this.service.updateById(params.id, payload);
+    const task = await this.service.updateById(params.id, payload, req.user!);
     if (!task) throw ERRORS.TASK_NOT_FOUND;
     return FormattedResponse.send({
       message: 'Task updated successfully!',

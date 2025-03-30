@@ -12,6 +12,7 @@ NestJS backend for Task Tracker
 - database - Database configurations and augmentations
   - potgres - Postgres
   - redis - Redis
+- integrations - External integrations such as firebase
 - modules - Core modules of the application organized into API versions
 - middleware - Shared middleware between modules
 - utils - Shared utilities between modules
