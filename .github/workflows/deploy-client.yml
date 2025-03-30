@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - client/**
+      - packages/**
+      - package.json
   workflow_dispatch:
 
 jobs:
