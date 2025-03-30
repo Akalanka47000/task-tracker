@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { FormattedResponse, Protect } from '@/middleware';
-import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Cookies } from '../../utils';
 import { LoginSchema } from './schema';
@@ -12,6 +12,7 @@ export class AuthController {
   constructor(private readonly service: AuthService) {}
 
   @Post('login')
+  @HttpCode(200)
   async create(@Res({ passthrough: true }) res: Response, @Body() payload: LoginSchema) {
     const { user, access_token, refresh_token } = await this.service.login(payload);
     Cookies.setTokens(res, access_token, refresh_token);
@@ -28,6 +29,7 @@ export class AuthController {
   }
 
   @Post('logout')
+  @HttpCode(200)
   @UseGuards(Protect)
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     await this.service.logout(req.cookies.access_token);

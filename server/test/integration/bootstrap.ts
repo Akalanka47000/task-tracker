@@ -1,6 +1,5 @@
 import 'tsconfig-paths/register';
-import { runSeeders } from 'typeorm-extension';
-import { default as dataSource } from '@/database/postgres';
+import { default as exec } from '@sliit-foss/actions-exec-wrapper';
 import { runDockerContainer } from '../__utils__';
 
 process.env.DISABLE_FUNCTION_TRACING = 'true';
@@ -12,13 +11,9 @@ export const getInitializedApp = async () => {
 
   await app.init();
 
-  await dataSource.initialize();
+  await exec('npm run migrate');
 
-  await dataSource.runMigrations({ transaction: 'all' });
-
-  await runSeeders(dataSource);
-
-  await dataSource.destroy();
+  await exec('npm run seed');
 
   return app;
 };

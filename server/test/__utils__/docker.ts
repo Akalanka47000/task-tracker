@@ -4,6 +4,7 @@ import exec from '@sliit-foss/actions-exec-wrapper';
  * @description Pulls and runs a docker container image if not already present
  * @param image The image to pull and run
  * @param port The default and exposed port of the container
+ * @param port Extra arguments to be passed
  */
 export const runDockerContainer = (image: string, port: number, args: string = '') => {
   return exec(
