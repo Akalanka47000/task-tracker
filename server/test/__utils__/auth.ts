@@ -35,6 +35,5 @@ export const getEmployee = async (app: App) => {
     username: mockEmployeeCredentials.username,
     password: mockEmployeeCredentials.password
   });
-  console.log(res.body, 234);
   return res.body.data;
 };
