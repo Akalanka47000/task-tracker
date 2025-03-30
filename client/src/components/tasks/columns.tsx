@@ -112,13 +112,13 @@ export const columns: ColumnDef<ITask>[] = [
             </Button>
           </DropdownTrigger>
           <DropdownMenu>
-            <DropdownItem key="edit">
+            <DropdownItem key="edit" className='p-0'>
               <EditTask data={data.row.original} />
             </DropdownItem>
-            <DropdownItem key="delete">
+            <DropdownItem key="delete" className='p-0'>
               <DeleteTask data={data.row.original} />
             </DropdownItem>
-            <DropdownItem key="mark-as-complete">
+            <DropdownItem key="mark-as-complete" className='p-0'>
               <MarkTaskAsCompleted data={data.row.original} />
             </DropdownItem>
           </DropdownMenu>
@@ -134,7 +134,7 @@ function EditTask({ data }: { data: ITask }) {
   const handleEdit = () => openTaskDialogWithSelector(data);
 
   return (
-    <div className="flex items-center gap-2" onClick={handleEdit}>
+    <div className="flex items-center gap-2 p-1.5" onClick={handleEdit}>
       <Pen className="h-4 w-4" />
       Edit
     </div>
@@ -147,7 +147,7 @@ function DeleteTask({ data }: { data: ITask }) {
   const handleDelete = () => openTaskDeleteDialogWithSelector(data);
 
   return (
-    <div className="flex items-center gap-2" onClick={handleDelete}>
+    <div className="flex items-center gap-2 p-1.5" onClick={handleDelete}>
       <Trash2 className="h-4 w-4" />
       Delete
     </div>
@@ -158,7 +158,7 @@ function MarkTaskAsCompleted({ data }: { data: ITask }) {
   const mutation = useToggleTaskStatus(data);
   return (
     <div
-      className={cn('flex items-center gap-2', mutation.isPending && 'pointer-events-none')}
+      className={cn('flex items-center gap-2 p-1.5', mutation.isPending && 'pointer-events-none')}
       onClick={mutation.mutate as any}>
       {mutation.isPending ? (
         <Loader2 className="animate-spin h-4 w-4" />

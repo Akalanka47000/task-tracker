@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { ChartNoAxesCombined, Loader2, PackageOpen } from 'lucide-react';
-import { FILTER, LIMIT_9 } from '@/constants';
+import { FILTER, LIMIT_9, ROUTE_TASKS } from '@/constants';
 import { useGetEmployeeInsights } from '@/hooks';
 import { useAnalyticsStore } from '@/store/analytics';
 import { cn } from '@/utils';
 import { Chip, Progress } from '@heroui/react';
+import { Link } from 'react-router-dom';
 
 export const testIds = {
   employeeInsights: 'employee-insights',
@@ -19,9 +20,10 @@ interface EmployeeInsightCardProps extends React.HTMLAttributes<HTMLDivElement> 
 
 function EmployeeInsightCard({ className, insight, ...props }: EmployeeInsightCardProps) {
   return (
+    <Link to={`${ROUTE_TASKS}?employee_id=${insight.id}`}>
     <div
       className={cn(
-        'w-full h-full flex flex-col justify-center items-center rounded-md border bg-primary/10 border-white/40 gap-0.5 p-6 py-3',
+        'w-full h-full flex flex-col justify-center items-center rounded-md border bg-primary/10 hover:bg-primary/15 border-white/40 gap-0.5 p-6 py-3 cursor-pointer transition-all duration-300',
         className
       )}
       {...props}>
@@ -39,6 +41,7 @@ function EmployeeInsightCard({ className, insight, ...props }: EmployeeInsightCa
         {insight.overdue_tasks || 'No'} Task{insight.overdue_tasks === 1 ? '' : 's'} Overdue
       </Chip>
     </div>
+    </Link>
   );
 }
 

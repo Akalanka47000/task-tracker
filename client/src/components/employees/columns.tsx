@@ -84,13 +84,13 @@ export const columns: ColumnDef<IUser>[] = [
             </Button>
           </DropdownTrigger>
           <DropdownMenu>
-            <DropdownItem key="edit">
+            <DropdownItem key="edit" className='p-0'>
               <EditUser data={data.row.original} />
             </DropdownItem>
-            <DropdownItem key="delete">
+            <DropdownItem key="delete" className='p-0'>
               <DeleteUser data={data.row.original} />
             </DropdownItem>
-            <DropdownItem key="view-tasks">
+            <DropdownItem key="view-tasks" className='p-0'>
               <ViewTasks data={data.row.original} />
             </DropdownItem>
           </DropdownMenu>
@@ -106,7 +106,7 @@ function EditUser({ data }: { data: IUser }) {
   const handleEdit = () => openUserDialogWithSelector(data);
 
   return (
-    <div className="flex items-center gap-2" onClick={handleEdit}>
+    <div className="flex items-center gap-2 p-1.5" onClick={handleEdit}>
       <Pen className="h-4 w-4" />
       Edit
     </div>
@@ -119,7 +119,7 @@ function DeleteUser({ data }: { data: IUser }) {
   const handleDelete = () => openUserDeleteDialogWithSelector(data);
 
   return (
-    <div className="flex items-center gap-2" onClick={handleDelete}>
+    <div className="flex items-center gap-2 p-1.5" onClick={handleDelete}>
       <Trash2 className="h-4 w-4" />
       Delete
     </div>
@@ -129,7 +129,7 @@ function DeleteUser({ data }: { data: IUser }) {
 function ViewTasks({ data }: { data: IUser }) {
   const navigate = useNavigate();
   return (
-    <div className="flex items-center gap-2" onClick={() => navigate(`${ROUTE_TASKS}?employee_id=${data.id}`)}>
+    <div className="flex items-center gap-2 p-1.5" onClick={() => navigate(`${ROUTE_TASKS}?employee_id=${data.id}`)}>
       <FileSliders className="h-4 w-4" />
       Manage Tasks
     </div>
