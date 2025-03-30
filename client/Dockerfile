@@ -12,7 +12,7 @@ COPY . .
 
 RUN pnpm install --ignore-scripts
 
-RUN pnpm build
+RUN pnpm build --filter client
 
 WORKDIR /app/client
 
