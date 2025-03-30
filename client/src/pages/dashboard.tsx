@@ -7,7 +7,7 @@ import { useAuthStore } from '@/store/auth';
 import { cn } from '@/utils';
 import { Tab, Tabs } from '@heroui/react';
 
-function Dashboard() {
+export function Dashboard() {
   const profile = useAuthStore((state) => state.profile);
   return (
     <div

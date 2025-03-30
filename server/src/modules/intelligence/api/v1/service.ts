@@ -10,7 +10,7 @@ const layer = 'repository';
 export class IntelligenceService {
   constructor(private repository: IntelligenceRepository) {}
 
-  async getSystemSummary({ filter }: GetSummarySchema = {}): Promise<ISystemaInsights> {
+  async getSystemSummary({ filter }: GetSummarySchema = {}): Promise<ISystemInsights> {
     const summaryItems = await traced[layer](preserveContext(this.repository, 'getSystemSummaryByDepartment'))(
       filter?.department
     );

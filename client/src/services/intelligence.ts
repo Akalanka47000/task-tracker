@@ -6,7 +6,7 @@ function getEmployeeInsights({ v = 'v1', options }: RequestConfig) {
 }
 
 function getSystemInsights({ v = 'v1', options }: RequestConfig) {
-  return instance.get<unknown, IAPIResponse<ISystemaInsights>>(`/api/${v}/intelligence/summary`, options);
+  return instance.get<unknown, IAPIResponse<ISystemInsights>>(`/api/${v}/intelligence/summary`, options);
 }
 
 export default { getEmployeeInsights, getSystemInsights };

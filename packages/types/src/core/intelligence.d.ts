@@ -1,5 +1,5 @@
 declare global {
-  interface ISystemaInsights {
+  interface ISystemInsights {
     total_employees: number;
     total_tasks: number;
     completed_tasks: number;

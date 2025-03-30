@@ -10,6 +10,10 @@ import { addToast } from '@heroui/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, Skeleton } from '../core';
 
+export const testIds = {
+  logoutButton: 'logout-button'
+};
+
 export function Header({ className, ...props }: HTMLProps<HTMLHeadElement>) {
   const client = useQueryClient();
   const { data: profile, isLoading } = useGetProfile();
@@ -56,7 +60,12 @@ export function Header({ className, ...props }: HTMLProps<HTMLHeadElement>) {
                 </span>
                 <span className="text-white text-xs md:text-xs">{profile.role}</span>
               </div>
-              <Button className="sm:w-36" isLoading={logout.isPending} onPress={logout.mutate as any} variant="flat">
+              <Button
+                className="sm:w-36"
+                isLoading={logout.isPending}
+                onPress={logout.mutate as any}
+                variant="flat"
+                data-testid={testIds.logoutButton}>
                 Logout
               </Button>
             </>
