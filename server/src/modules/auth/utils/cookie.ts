@@ -4,8 +4,9 @@ export class Cookies {
   private static setCookie(res: Response, name: string, value: string, expiry: number = 1) {
     res.cookie(name, value, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      secure: true,
+      sameSite: 'none',
+      path: '/',
       maxAge: expiry * 60 * 60 * 1000
     });
   }
