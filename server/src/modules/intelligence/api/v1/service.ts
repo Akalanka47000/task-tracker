@@ -10,7 +10,7 @@ const layer = 'repository';
 export class IntelligenceService {
   constructor(private repository: IntelligenceRepository) {}
 
-  async getSystemSummary({ filter }: GetSummarySchema = {}) {
+  async getSystemSummary({ filter }: GetSummarySchema = {}): Promise<ISystemaInsights> {
     const summaryItems = await traced[layer](preserveContext(this.repository, 'getSystemSummaryByDepartment'))(
       filter?.department
     );
@@ -22,7 +22,7 @@ export class IntelligenceService {
     };
   }
 
-  async getEmployeeSummary(retrievalOptions: GetPaginatedSummarySchema) {
+  async getEmployeeSummary(retrievalOptions: GetPaginatedSummarySchema): Promise<PaginatedResult<IEmployeeInsight>> {
     const result = await redis.preserveJSON(
       `intelligence-employee-summary-${JSON.stringify(retrievalOptions)}`,
       () => traced[layer](preserveContext(this.repository, 'getEmployeeSummaryByDepartment'))(retrievalOptions),

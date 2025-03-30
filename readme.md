@@ -1,10 +1,10 @@
-# Task List
+# Task Tracker
 
-This is a [Turborepo](https://turbo.build/repo) designed to house all components of this advanced tasklist
+This is a [Turborepo](https://turbo.build/repo) designed to house all components of this task tracker
 
 </br>
 
-## [API Documentation](https://documenter.getpostman.com/view/32343835/2sAYkKGcHH)
+## [API Documentation](https://documenter.getpostman.com/view/32343835/2sB2cPk5iX)
 
 </br>
 
@@ -18,12 +18,12 @@ This is a [Turborepo](https://turbo.build/repo) designed to house all components
 
 ## File Structure
 
-- client - Frontend React application for TaskList
+- client - Frontend React application for Task Tracker
 - packages - All shared packages
   - config-eslint - ESLint configurations
   - constants - Common constants
   - types - Common type definitions
-- server - Backend service for TaskList
+- server - Backend service for Task Tracker
 - commitlint.config.js - Commitlint configuration file
 - lefthook.yml - Lefthook configuration file
 - pnpm-workspace.yaml - Configures the workspaces so that PNPM can work properly

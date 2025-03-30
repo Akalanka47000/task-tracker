@@ -11,4 +11,5 @@ export interface GetPaginatedQueryProps {
   page?: number;
   limit?: number;
   params?: Record<string, any>;
+  onSuccess?: (data: any) => void;
 }

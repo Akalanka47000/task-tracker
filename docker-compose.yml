@@ -21,7 +21,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - DB_URL=mongodb://mongo:27017/tasklist
+      - DB_URL=postgresql://postgres:password@postgres:5432/task-tracker
       - REDIS_CONNECTION_STRING=redis://redis:6379
     depends_on:
       - mongo
@@ -30,15 +30,21 @@ services:
       - app-network
 
   mongo:
-    image: mongo:6
-    container_name: mongo
+    image: postgres
+    restart: always
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=task-tracker
     ports:
-      - "27017:27017"
+      - "5432:5432"
     networks:
       - app-network
 
   redis:
     image: redis:6
+    restart: always
     container_name: redis
     ports:
       - "6379:6379"

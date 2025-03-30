@@ -1,4 +1,5 @@
 import { UserRole } from '@shared/constants';
+import { Analytics } from '@/components/analytics';
 import { Protect } from '@/components/auth';
 import { EmployeeTable } from '@/components/employees';
 import { TaskTable } from '@/components/tasks';
@@ -22,7 +23,7 @@ function Dashboard() {
           }}
           aria-label="Sections">
           <Tab key="analytics" title="Analytics">
-            Analytics
+            <Analytics />
           </Tab>
           <Tab key="employees" title="Employees">
             <EmployeeTable />
