@@ -9,8 +9,9 @@ import { default as helmet } from 'helmet';
 import { default as qs } from 'qs';
 import { Config } from '@/config';
 import { GlobalExceptionFilter, httpLogger, responseInterceptor } from '@/middleware';
-import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { INestApplication, NestApplicationOptions, ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { Test } from '@nestjs/testing';
 import { AppModule } from './app.module';
 
 export const service = 'Task Tracker Service';
@@ -18,12 +19,23 @@ export const service = 'Task Tracker Service';
 const logger = moduleLogger(service);
 
 export async function createApplication() {
-  const app = await NestFactory.create(AppModule, {
+  const opts: NestApplicationOptions = {
     cors: {
       origin: Config.FRONTEND_BASE_URL,
       credentials: true
     }
-  });
+  };
+
+  let app: INestApplication;
+
+  if (process.env.NODE_ENV === 'test') {
+    const moduleFixture = await Test.createTestingModule({
+      imports: [AppModule]
+    }).compile();
+    app = moduleFixture.createNestApplication(opts);
+  } else {
+    app = await NestFactory.create(AppModule, opts);
+  }
 
   app.setGlobalPrefix('api', { exclude: ['system/*'] });
 
@@ -74,4 +86,6 @@ async function bootstrap() {
   });
 }
 
-bootstrap();
+if (process.env.NODE_ENV !== 'test') {
+  bootstrap();
+}

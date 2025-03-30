@@ -11,7 +11,7 @@ const dataSourceOptions: DataSourceOptions & SeederOptions = {
   type: 'postgres',
   url: Config.DB_URL,
   synchronize: false,
-  logging: Config.ENVIRONMENT !== Enviroment.Production,
+  logging: Config.ENVIRONMENT !== Enviroment.Production && process.env.NODE_ENV !== 'test',
   entities: [Task, User],
   migrations:
     process.env.TYPEORM_CLI || process.env.NODE_ENV === 'test' ? ['./src/database/postgres/migrations/**.ts'] : [],

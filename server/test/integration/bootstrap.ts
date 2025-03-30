@@ -2,8 +2,6 @@ import 'tsconfig-paths/register';
 import { default as exec } from '@sliit-foss/actions-exec-wrapper';
 import { runDockerContainer } from '../__utils__';
 
-process.env.DISABLE_FUNCTION_TRACING = 'true';
-
 export const getInitializedApp = async () => {
   const { createApplication } = require('@/main');
 
