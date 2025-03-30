@@ -21,7 +21,7 @@ function EmployeeInsightCard({ className, insight, ...props }: EmployeeInsightCa
   return (
     <div
       className={cn(
-        'w-full flex flex-col justify-center items-center rounded-md border bg-gray-100/10 border-white/40 gap-0.5 p-6 py-3',
+        'w-full h-full flex flex-col justify-center items-center rounded-md border bg-primary/10 border-white/40 gap-0.5 p-6 py-3',
         className
       )}
       {...props}>
@@ -63,8 +63,6 @@ export function EmployeeInsights() {
       setDocs([...docs, ...data.docs]);
       if (!data.docs?.length || data.docs.length < LIMIT_9) {
         setReachedEnd(true);
-      } else {
-        setPage(page + 1);
       }
     }
   });
@@ -84,7 +82,7 @@ export function EmployeeInsights() {
         startContent={<ChartNoAxesCombined className="w-6 h-6" />}>
         Employee Insights
       </Chip>
-      {!isLoading && !docs.length ? (
+      {(!isLoading && !isFetching) && !docs.length ? (
         <PackageOpen className="mt-12 stroke-[1px]" size={150} data-testid={testIds.noEmployeeInsightsIndicator} />
       ) : (
         <div
