@@ -39,8 +39,6 @@ export function LoginForm() {
     onError: filterAndNotifyError
   });
 
-  console.log(form.formState.errors);
-
   return (
     <>
       <Form {...form}>

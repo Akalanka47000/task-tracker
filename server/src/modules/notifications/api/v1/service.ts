@@ -1,6 +1,6 @@
-import { NOTIFICATION_TOPICS } from '@shared/constants';
+import { NOTIFICATION_TOPICS, UserRole } from '@shared/constants';
 import { traced } from '@sliit-foss/functions';
-import { sendPushNotification, sendPushNotificationToTopic } from '@/integrations/firebase';
+import { sendPushNotification, sendPushNotificationToTopic, subscribeToTopic } from '@/integrations/firebase';
 import { UserService } from '@/modules/users/api/v1/service';
 import { Injectable } from '@nestjs/common';
 
@@ -10,6 +10,7 @@ const layer = 'repository';
 export class NotificationService {
   constructor(private userService: UserService) {}
   registerToken(user: IUser, token: string) {
+    if (user.role === UserRole.Administrator) traced(subscribeToTopic)([token], NOTIFICATION_TOPICS.ADMINS);
     return traced[layer](preserveContext(this.userService, 'updateById'))(user.id, {
       fcm_token: token
     });

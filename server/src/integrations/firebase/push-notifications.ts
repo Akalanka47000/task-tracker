@@ -38,3 +38,7 @@ export function sendPushNotificationToTopic(topic: string, title: string, body: 
       logger.warn(`Failed to send push notification to topic - ${topic}`);
     });
 }
+
+export async function subscribeToTopic(tokens: string[], topic: string) {
+  await admin.messaging().subscribeToTopic(tokens, topic);
+}
