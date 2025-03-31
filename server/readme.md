@@ -37,6 +37,6 @@ NestJS backend for Task Tracker
 
 ## Tests
 
-- `pnpm test` - First test execution may take some time since it starts 2 docker containers for Postgres and Redis.
+- `pnpm test` - First test execution may take some time since it starts 2 docker containers for Postgres and Redis(Please note that if directly run from here instead of through Turbo the dependant packages must be built first)
 
 </br>

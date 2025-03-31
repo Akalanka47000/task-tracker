@@ -1,6 +1,6 @@
-# Task List Client
+# Task Tracker Client
 
-React + Vite application for Task List
+React + Vite application for Task Tracker
 
 ## File Structure
 
@@ -15,11 +15,10 @@ React + Vite application for Task List
   - services - Service central react query hooks
 - pages - Page and routing configurations
 - providers - App level global providers
-- services - External API connectivity layer
+- services - External connectivity layer
 - store - Zustand stores
-- locales - Translations if needed
 - styles - Custom styles
-- type - Type definitions
+- types - Type definitions
 - utils - Shared utilities
 
 </br>
@@ -29,3 +28,4 @@ React + Vite application for Task List
 - `pnpm dev` - Starts the server in dev mode
 - `pnpm build` - Builds the server
 - `pnpm start` - Runs the built server
+- `pnpm test` - Runs unit tests (Please note that if directly run from here instead of through Turbo the dependant packages must be built first)

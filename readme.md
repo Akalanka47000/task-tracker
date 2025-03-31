@@ -36,7 +36,7 @@ This is a [Turborepo](https://turbo.build/repo) designed to house all components
 
 - [Node](https://nodejs.org) (Version 18 or higher).
 - You will need to create a `.env` at the root of every workspace and fill in the required keys. The services will not start without them.
-- A [MongoDB](https://www.mongodb.com) and a [Redis](https://redis.io/) data source.
+- A [Postgres](https://www.postgresql.org) and a [Redis](https://redis.io/) data source.
 - A Firebase account for push notifications (Optional)
 
 </br>
