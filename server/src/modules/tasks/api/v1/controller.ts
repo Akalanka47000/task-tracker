@@ -1,12 +1,23 @@
 import { Request } from 'express';
 import { UserRole } from '@shared/constants';
-import { AdminProtect, FormattedResponse, Protect } from '@/middleware';
+import { AdminProtect, FilterQuery, FormattedResponse, Protect } from '@/middleware';
 import { ERRORS as AUTH_ERRORS } from '@/modules/auth/constants';
 import { QuerySchema, UUIDSchema } from '@/utils';
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+  UseInterceptors
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ERRORS } from '../../constants';
-import { Task } from '../../models';
 import { SelfGuard } from './middleware';
 import { CreateTaskSchema, UpdateTaskSchema } from './schema';
 import { TaskService } from './service';
@@ -28,7 +39,8 @@ export class TaskController {
   }
 
   @Get()
-  async getAll(@Query() query: QuerySchema<Task>) {
+  @UseInterceptors(FilterQuery)
+  async getAll(@Query() query: QuerySchema) {
     const result = await this.service.getAll(query);
     return FormattedResponse.send({
       message: 'Tasks fetched successfully!',

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { UserRole } from '@shared/constants';
 import { Button, DataTable, Filters } from '@/components';
-import { dataAttributes, FILTER } from '@/constants';
+import { dataAttributes, FILTER, ILIKE } from '@/constants';
 import { useGetProfile, useGetTasks } from '@/hooks';
 import { useTaskStore } from '@/store/task';
 import { columns } from './columns';
@@ -30,7 +30,8 @@ export function TaskTable({ employeeId }: { employeeId?: string | null }) {
             definitions={[
               {
                 key: 'name',
-                placeholder: 'Search by name...'
+                placeholder: 'Search by name...',
+                operator: ILIKE
               }
             ]}
             setFilters={setFilters}

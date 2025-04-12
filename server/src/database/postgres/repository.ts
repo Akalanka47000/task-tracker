@@ -25,6 +25,10 @@ export class CustomRepository<Entity extends ObjectLiteral> extends Repository<E
       opts.where = options.filter;
     }
 
+    if (options.select) {
+      opts.select = options.select;
+    }
+
     opts.order = options.sort || {};
 
     if (!Object.keys(opts.order).length) {
@@ -35,8 +39,7 @@ export class CustomRepository<Entity extends ObjectLiteral> extends Repository<E
       return query ? query(opts) : this.find(opts);
     }
 
-    options.page = Number(options.page);
-    options.limit = Number(options.limit) || 10;
+    options.limit ??= 10;
 
     opts.take = options.limit;
     opts.skip = (options.page - 1) * opts.take;

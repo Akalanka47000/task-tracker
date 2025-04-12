@@ -17,6 +17,7 @@ declare global {
     sort?: FindOptionsOrder<T>;
     page?: number;
     limit?: number;
+    select?: string[];
   }
 }
 

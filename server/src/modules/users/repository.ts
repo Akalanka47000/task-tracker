@@ -10,15 +10,13 @@ export class UserRepository extends CustomRepository<User> {
     super(repository.target, repository.manager, repository.queryRunner);
   }
   async findByUsername(username: string, plain = false) {
-    const user = await this.findOneBy({ username });
+    const user = await this.createQueryBuilder('users').where({ username }).addSelect('users.password').getOne();
     if (plain || !user) return user;
     return User.cleanse(user);
   }
 
-  async findByID(id: string, plain = false) {
-    const user = await this.findOneBy({ id });
-    if (plain || !user) return user;
-    return User.cleanse(user);
+  findByID(id: string) {
+    return this.findOneBy({ id });
   }
 
   findAll(opts: QueryOptions<User>) {

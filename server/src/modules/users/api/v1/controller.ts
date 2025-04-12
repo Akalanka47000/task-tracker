@@ -1,9 +1,8 @@
-import { AdminProtect, FormattedResponse, Protect } from '@/middleware';
+import { AdminProtect, FilterQuery, FormattedResponse, Protect } from '@/middleware';
 import { QuerySchema, UUIDSchema } from '@/utils';
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ERRORS } from '../../constants';
-import { User } from '../../models';
 import { CreateUserSchema, UpdateUserSchema } from './schema';
 import { UserService } from './service';
 
@@ -23,7 +22,8 @@ export class UserController {
   }
 
   @Get()
-  async getAll(@Query() query: QuerySchema<User>) {
+  @UseInterceptors(FilterQuery)
+  async getAll(@Query() query: QuerySchema) {
     const result = await this.service.getAll(query);
     return FormattedResponse.send({
       message: 'Users fetched successfully!',

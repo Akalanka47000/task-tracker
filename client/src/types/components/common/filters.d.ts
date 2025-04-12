@@ -9,7 +9,7 @@ export interface FilterDefinition {
   placeholder?: string;
   value?: any;
   options?: FilterOption[];
-  regexp?: boolean;
+  compoundOperator?: string;
   secondary?: boolean;
   operator?: string;
   inputType?: string;

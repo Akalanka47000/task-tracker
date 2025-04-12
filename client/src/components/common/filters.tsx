@@ -1,23 +1,33 @@
 import { useCallback, useEffect, useState } from 'react';
 import { default as debounce } from 'lodash/debounce';
 import { Input } from '@/components';
-import { FILTER } from '@/constants';
+import { EQ, FILTER } from '@/constants';
 import { FilterContentProps, FilterDefinition, FilterProps } from '@/types';
 import { cn } from '@/utils';
 import { Select, SelectItem } from '@heroui/react';
 
 export function computeFilters(filters: FilterDefinition[]) {
   return filters.reduce((acc: Record<string, any>, curr) => {
-    const key = `${FILTER}[${curr.key}]`;
+    const key = `${FILTER}[${curr.compoundOperator ?? curr.key}]`;
     if (curr.value) {
-      acc[key] = curr.value;
+      const value = (curr.operator || EQ).replace(':value', curr.value);
+      if (curr.compoundOperator) {
+        if (!acc[key]) {
+          acc[key] = `${curr.key}=${value}`;
+        } else {
+          acc[key] = `${acc[key]},${curr.key}=${value}`;
+        }
+      } else {
+        acc[key] = value;
+      }
     } else {
-      delete acc[key];
+      if (!curr.compoundOperator) {
+        delete acc[key];
+      }
     }
     return acc;
   }, {});
 }
-
 export function FilterContent({
   filtersLocalState,
   setFiltersLocalState,
